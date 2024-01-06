@@ -1,0 +1,22 @@
+services:
+  itest:
+    image: golang:1.21
+    working_dir: /app
+    tmpfs:
+      - /external
+      - /external_alt
+    environment:
+      - GOCOVERDIR=./coverage
+    volumes:
+      - ./gtrash:/app/gtrash
+      - ./itest:/app/itest
+      - ./go.mod:/app/go.mod
+      - ./go.sum:/app/go.sum
+    # privileged: true
+    command:
+      - /bin/bash
+      - -c
+      - |
+        set -eu
+        bash ./itest/setup.sh
+        go test -v ./itest

@@ -1,0 +1,5 @@
+gtrash
+__debug_bin*
+coverage
+coverage.html
+coverage.txt
