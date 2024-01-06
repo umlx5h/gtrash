@@ -23,17 +23,17 @@ func newRestoreGroupCmd() *restoreGroupCmd {
 	cmd := &cobra.Command{
 		Use:     "restore-group",
 		Aliases: []string{"rg"},
-		Short:   "Restore trashed files as group interactively (rg)",
+		Short:   "Restore trashed files as a group interactively (rg)",
 		Long: `Description:
-  Restore files using TUI.
-  Unlike restore, files deleted at the same time are grouped together.
+  Use the TUI interface for file restoration.
+  Unlike the 'restore' command, files deleted simultaneously are grouped together.
 
-  Multiple selections are not allowed.
+  Multiple selections of groups are not allowed.
 
-  Actually, the files deleted by put are not grouped correctly.
-  Files with matching deletion times in seconds are grouped together.
+  Actually, files deleted using 'gtrash put' may not be grouped accurately.
+  Files with deletion times matching in seconds are grouped together.
 
-  See below for details.
+  Refer below for detailed information.
   ref: https://github.com/umlx5h/gtrash#how-does-the-restore-group-subcommand-work
 `,
 		SilenceUsage: true,

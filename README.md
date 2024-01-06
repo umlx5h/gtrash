@@ -320,7 +320,7 @@ If you are in the habit of using rm, consider creating an alias that displays a 
 alias rm="echo -e 'If you want to use rm really, then use \"\\\\rm\" instead.'; false"
 ```
 
-When you want to execute the actual rm, use `\rm` to bypass use alias.
+When you want to execute the actual rm, use `\rm` to bypass the alias.
 
 ```bash
 $ rm foo
@@ -574,7 +574,7 @@ $ gtrash find --day-old 7 --size-large 10mb --rm foo
 ## Configuration
 
 Certain behaviors can be altered by setting environment variables.  
-Refer to the [Configuration](doc/configuration.md) document.
+Refer to the [Configuration](doc/configuration.md).
 
 ## Related projects
 

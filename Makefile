@@ -1,6 +1,6 @@
 .PHONY: test itest
 
-gtrash: main.go
+build:
 	go build
 
 clean:

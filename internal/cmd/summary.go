@@ -20,13 +20,12 @@ func newSummaryCmd() *summaryCmd {
 	root := &summaryCmd{}
 	cmd := &cobra.Command{
 		Use:     "summary",
-		Short:   "Show trashcan summary (s)",
+		Short:   "Show summary of all trash cans (s)",
 		Aliases: []string{"s"},
 		Long: `Description:
-  Displays statistics for all trasn cans.
-  Displays the number of files (folders) and size.
-
-  If multiple trash cans are detected, statistics for each and for the total are displayed.`,
+  Displays statistics summarizing all trash cans.
+  Shows the count of files (and folders) and their total size.
+  When multiple trash cans are detected, the statistics for each and the total are displayed.`,
 		SilenceUsage:      true,
 		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,

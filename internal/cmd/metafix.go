@@ -24,10 +24,9 @@ func newMetafixCmd() *metafixCmd {
 		Use:   "metafix",
 		Short: "Fix trashcan metadata",
 		Long: `Description:
-  Detect and delete meta informations for which no corresponding files exist.
-
-  This is useful after manually deleting files in the Trash directory.
-  See below for details.
+  Detect and delete meta-information without corresponding files.
+  This command is useful after manually removing files in the Trash directory.
+  Refer below for detailed information.
 
   https://github.com/umlx5h/gtrash#what-does-the-metafix-subcommand-do`,
 		SilenceUsage:      true,

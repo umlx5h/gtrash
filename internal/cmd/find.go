@@ -54,10 +54,10 @@ func newFindCmd() *findCmd {
 		Aliases: []string{"f"},
 		Short:   "Find trashed files and do restore or remove them (f)",
 		Long: `Description:
-  All deleted files can be displayed and searched.
-  You can search by passing a string as a command line argument.
+  Displays and searches all trashed files.
+  You can search by entering a string as a command-line argument.
 
-  If you want to delete or restore the searched files, pass the --rm and --restore options, respectively.`,
+  To delete or restore the searched files, use the --rm and --restore options, respectively.`,
 		Example: `  # Show all trashed files
   $ gtrash find
 
@@ -83,14 +83,14 @@ func newFindCmd() *findCmd {
   # Restore all files
   $ gtrash find --restore
 
-  # Remove files deleted more than a week ago
+  # Remove files deleted over a week ago
   $ gtrash find --day-old 7 --rm
 
-  # Remove greater than 10MB trashed files
+  # Remove trashed files larger than 10MB
   $ gtrash find --size-large 10mb --rm
 
-  # fuzzy find multiple items and remove them permanently
-  # The -o in xargs is required to display the confirmation prompt.
+  # Fuzzy find multiple items and remove them permanently
+  # The -o in xargs is necessary for the confirmation prompt to display.
   $ gtrash find | fzf --multi | awk -F'\t' '{print $2}' | xargs -o gtrash rm`,
 		SilenceUsage: true,
 		RunE: func(_ *cobra.Command, args []string) error {

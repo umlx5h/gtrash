@@ -46,31 +46,31 @@ func newPutCmd() *putCmd {
 		Aliases: []string{"p"},
 		Short:   "Put files to trash (p)",
 		Long: `Description:
-  A substitute to rm, which moves the file to the trash.
-  If the target file is in the main file system, move the file to the following folder.
+  A substitute for 'rm', moving files to the trash.
+  For files in the main file system, they're moved to the following folder:
       $XDG_DATA_HOME/Trash ($HOME/.local/share/Trash)
 
-  For external file system files, move the file to either of the following at the top of the mount point.
+  For files in external file systems, they're moved to either of the following locations at the root of the mount point:
       1. $MOUNTPOINT/.Trash/$uid
       2. $MOUNTPOINT/.Trash-$uid
 
-  Folder 1 has priority, but must be pre-created and sticky bit set. ($uid part is created automatically)
-  2 is created automatically.
+  Folder 1 takes precedence but requires pre-creation with a set sticky bit ($uid part is created automatically).
+  Folder 2 is created automatically.
 
-  Use the -v or --debug option if you want to know to which folder the files will be moved.
-  The path in the trash can is displayed by adding --show-trashpath to find command.
+  To identify the folder where files will be moved, use the -v or --debug option.
+  To display the path in the trash can, use --show-trashpath with the find command:
       $ gtrash find --show-trashpath
 
-  The -d, -r, -R, and --recursive options are ignored by default.
-  They are not necessary for removing directories, but are required if --rm-mode is used.`,
+  By default, the options -d, -r, -R, and --recursive are ignored.
+  They are unnecessary for file removal but required when using --rm-mode.`,
 
-		Example: `  # -r is not necessary to delete folder
+		Example: `  # -r is unnecessary to delete a folder
   $ gtrash put file1 file2 dir1/ dir2
 
-  # For files beginning with a hyphen, pass the file name after the --
+  # For files starting with a hyphen, specify the filename after the '--'
   $ gtrash put -- -foo
 
-  # If expanded on the shell, the glob pattern can also be used.
+  # If expanded in the shell, you can use glob patterns
   $ gtrash put foo*`,
 		Args:          cobra.MinimumNArgs(1),
 		SilenceUsage:  true,

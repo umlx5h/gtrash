@@ -23,18 +23,18 @@ func newRemoveCmd() *removeCmd {
 	root := &removeCmd{}
 	cmd := &cobra.Command{
 		Use:   "rm PATH...",
-		Short: "Remove trashed files PERMANENTLY from cmd args",
+		Short: "Remove trashed files PERMANENTLY in the cmd arguments",
 		Long: `Descricption:
-  Remove the file passed as a command line argument.
-  The path must be specified as a full path.
+  Permanently remove the files specified as command-line arguments.
+  Paths must be specified as full paths.
 
-  This command is intended to be used in combination with other commands such as fzf.
-  It is usually better to use find --rm.`,
-		Example: `  # Remove files matching the full path PERMANENTLY.
+  This command is intended to be used alongside other commands like fzf.
+  Generally, using 'find --rm' is recommended over this command.`,
+		Example: `  # Permanently remove files by providing full paths..
   $ gtrash rm /home/user/file1 /home/user/file2
 
-  # fuzzy find multiple items and remove them PERMANENTLY.
-  # The -o in xargs is required to display the confirmation prompt.
+  # Fuzzy find multiple items and permanently remove them.
+  # The -o in xargs is necessary for the confirmation prompt to display.
   $ gtrash find | fzf --multi | awk -F'\t' '{print $2}' | xargs -o gtrash rm`,
 		SilenceUsage: true,
 		Args:         cobra.MinimumNArgs(1),

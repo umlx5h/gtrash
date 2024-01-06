@@ -34,20 +34,19 @@ func newRestoreCmd() *restoreCmd {
 		Aliases: []string{"r"},
 		Short:   "Restore trashed files interactively (r)",
 		Long: `Description:
-  Restore files using the TUI interface.
-  You can select multiple files.
-  If you want to know how to use the TUI interface, press the ? key for help.
+  Use the TUI interface to restore files, enabling multiple file selection.
+  Press the ? key within the TUI interface for usage help.
 
-  When the full path is specified in the command line argument, restoration is performed without TUI.`,
-		Example: `  # restore interactively
+  When specifying the full path in the command-line argument, restoration is performed without using the TUI interface.`,
+		Example: `  # Restore interactively
   $ gtrash restore
 
   # Restore files without TUI
-  # Must be specified as full path
+  # Must specify full paths
   $ gtrash restore /home/user/file1 /home/user/file2
 
-  # fuzzy find multiple items and restore them
-  # The -o in xargs is required to display the confirmation prompt.
+  # Fuzzy find multiple items and restore them
+  # The -o in xargs is necessary for the confirmation prompt to display.
   $ gtrash find | fzf --multi | awk -F'\t' '{print $2}' | xargs -o gtrash restore`,
 		SilenceUsage: true,
 		RunE: func(_ *cobra.Command, args []string) error {
