@@ -1,4 +1,5 @@
 gtrash
+dist/
 __debug_bin*
 coverage
 coverage.html

@@ -8,10 +8,9 @@ services:
     environment:
       - GOCOVERDIR=./coverage
     volumes:
-      - ./gtrash:/app/gtrash
+      - ./gtrash:/app/gtrash:ro
       - ./itest:/app/itest
-      - ./go.mod:/app/go.mod
-      - ./go.sum:/app/go.sum
+      - ./go.mod:/app/go.mod:ro
     # privileged: true
     command:
       - /bin/bash
