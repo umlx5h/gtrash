@@ -25,6 +25,10 @@ archives:
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
       {{- if .Arm }}v{{ .Arm }}{{ end }}
+       # Only include binary
+    # Only include binary in archive
+    files:
+      - none*
 
 changelog:
   sort: asc

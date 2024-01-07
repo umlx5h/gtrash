@@ -20,7 +20,7 @@ Additionally, `gtrash` features a modern TUI interface, making it very intuitive
 - Multi subcommands design in a single static binary written in Go
 - Restoration of co-deleted files together
 - Easy integration with other CLI tools, such as fzf
-- Safety and Intuitiveness
+- Safe and Ergonomic
   - Ensures safety by displaying a list and confirmation prompt whenever a file is permanently deleted.
 
 ## Supported OS
@@ -37,6 +37,42 @@ but Mac's system trash can is not used
 Not supported
 
 It works perfectly on WSL2 because it is real Linux
+
+## Installation
+
+### From binaries
+
+Download the binary from [GitHub Releases](https://github.com/umlx5h/gtrash/releases/latest) and place it in your `$PATH`.
+
+Install the latest binary to `/usr/local/bin`:
+
+```bash
+curl -L "https://github.com/umlx5h/gtrash/releases/latest/download/gtrash_$(uname -s)_$(uname -m).tar.gz" | tar xz
+chmod a+x ./gtrash
+sudo mv ./gtrash /usr/local/bin/gtrash
+```
+
+### Homebrew
+
+```
+brew install umlx5h/tap/gtrash
+```
+
+### Go install
+
+```
+go install github.com/umlx5h/gtrash@latest
+```
+
+### Build from source
+
+```bash
+git clone https://github.com/umlx5h/gtrash.git
+cd gtrash
+go build
+./gtrash
+sudo cp ./gtrash /usr/local/bin/gtrash
+```
 
 ## Usage
 
@@ -155,7 +191,6 @@ $ gtrash -h
 $ gtrash put -h
 ```
 
-## Install
 
 ## How it works
 
