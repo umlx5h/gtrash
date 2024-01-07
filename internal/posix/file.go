@@ -7,6 +7,8 @@ import (
 	"io"
 	"io/fs"
 	"os"
+
+	"github.com/umlx5h/go-runewidth"
 )
 
 func IsBinary(content io.ReadSeeker, fileSize int64) (bool, error) {
@@ -75,7 +77,7 @@ func FileHead(path string, width int, maxLines int) string {
 			if err != nil {
 				return "(error: open directory)"
 			}
-			lines = append(lines, fmt.Sprintf("%s\t%s", dinfo.Mode().Perm().String(), dir.Name()))
+			lines = append(lines, fmt.Sprintf("%s %s", dinfo.Mode().Perm().String(), runewidth.Truncate(dir.Name(), width-14, "…")))
 		}
 	case fi.Mode().IsRegular():
 		f, err := os.Open(path)
@@ -98,12 +100,8 @@ func FileHead(path string, width int, maxLines int) string {
 				break
 			}
 			t := s.Text()
-			// make preview faster by truncating file width
-			if len(t) > width {
-				lines = append(lines, t[:width])
-			} else {
-				lines = append(lines, t)
-			}
+			// truncate to screen width
+			lines = append(lines, runewidth.Truncate(t, width-3, "…"))
 			n++
 		}
 	default:
