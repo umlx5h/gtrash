@@ -87,7 +87,8 @@ func newPutCmd() *putCmd {
 	}
 	cmd.Flags().BoolVarP(&root.opts.force, "force", "f", false, "ignore nonexistent files and arguments")
 	cmd.Flags().BoolVarP(&root.opts.prompt, "interactive", "i", false, "prompt before every removal")
-	cmd.Flags().BoolVarS(&root.opts.promptOnce, "I", "I", false, "prompt once before trashing")
+	// short only options are not available
+	cmd.Flags().BoolVarP(&root.opts.promptOnce, "interactive-once", "I", false, "prompt once before trashing")
 	cmd.Flags().BoolVarP(&root.opts.verbose, "verbose", "v", false, "explain what is being done")
 
 	// rm mode options if --rm-mode used
@@ -96,7 +97,9 @@ func newPutCmd() *putCmd {
 remove empty directories (--rm-mode)`)
 	cmd.Flags().BoolVarP(&root.opts.recursive, "recursive", "r", false, `ignored unless --rm-mode set
 remove directories and their contents recursively (--rm-mode)`)
-	cmd.Flags().BoolVarS(&root.opts.recursive, "R", "R", false, "same as -r")
+
+	// TODO: Since short only options are not available, have no choice but to assign a long name.
+	cmd.Flags().BoolVarP(&root.opts.recursive, "Recursive", "R", false, "same as -r")
 
 	cmd.Flags().BoolVar(&root.opts.homeFallback, "home-fallback", env.HOME_TRASH_FALLBACK_COPY, `Enable fallback to home directory trash
 If the deletion of a file in an external file system fails, this option may help.`)

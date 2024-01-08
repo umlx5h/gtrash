@@ -77,6 +77,12 @@ sudo mv ./gtrash /usr/local/bin/gtrash
 brew install umlx5h/tap/gtrash
 ```
 
+### Go install
+
+```
+go install github.com/umlx5h/gtrash@latest
+```
+
 ### Build from source
 
 ```bash
@@ -306,13 +312,13 @@ While `rm` uses the [unlink](https://man7.org/linux/man-pages/man2/unlink.2.html
 ```bash
 $ gtrash put -h
 Flags:
-  -d, --dir             ignored unless --rm-mode set
-  -f, --force           ignore nonexistent files and arguments
-  -i, --interactive     prompt before every removal
-  -I                    prompt once before trashing
-  -r, -R, --recursive   ignored unless --rm-mode set
-      --rm-mode         enable rm-like mode (change behavior -r, -R, -d)
-  -v, --verbose         explain what is being done
+  -d, --dir               ignored unless --rm-mode set
+  -f, --force             ignore nonexistent files and arguments
+  -i, --interactive       prompt before every removal
+  -I, --interactive-once  prompt once before trashing
+  -r, -R, --recursive     ignored unless --rm-mode set
+      --rm-mode           enable rm-like mode (change behavior -r, -R, -d)
+  -v, --verbose           explain what is being done
 ```
 
 The `-r` option is not necessary for deleting folders since files are restorable even if mistakenly removed.
