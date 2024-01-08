@@ -471,7 +471,14 @@ func (m *Model) renderRow(rowID int) string {
 		appendWidth = m.cols[m.shortColIdx].Width + 2
 	}
 
+	truncate := runewidth.Truncate
+
 	for i, value := range m.rows[rowID] {
+		// change truncatePrefix in last column
+		if i == len(m.rows[rowID])-1 {
+			truncate = runewidth.TruncatePrefix
+		}
+
 		colWidth := m.cols[i].Width
 		if m.shortMode {
 			if m.shortColIdx == i {
@@ -482,7 +489,7 @@ func (m *Model) renderRow(rowID int) string {
 			}
 		}
 		style := lipgloss.NewStyle().Width(colWidth).MaxWidth(colWidth).Inline(true)
-		renderedCell := m.styles.Cell.Render(style.Render(runewidth.TruncatePrefix(value, colWidth, "…")))
+		renderedCell := m.styles.Cell.Render(style.Render(truncate(value, colWidth, "…")))
 		s = append(s, renderedCell)
 	}
 
