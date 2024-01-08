@@ -92,9 +92,11 @@ func newPutCmd() *putCmd {
 
 	// rm mode options if --rm-mode used
 	cmd.Flags().BoolVar(&root.opts.rmMode, "rm-mode", env.PUT_RM_MODE, "enable rm-like mode (change behavior -r, -R, -d)")
-	cmd.Flags().BoolVarP(&root.opts.dir, "dir", "d", false, "ignored unless --rm-mode set")
-	cmd.Flags().BoolVarP(&root.opts.recursive, "recursive", "r", false, "ignored unless --rm-mode set")
-	cmd.Flags().BoolVarS(&root.opts.recursive, "R", "R", false, "ignored unless --rm-mode set")
+	cmd.Flags().BoolVarP(&root.opts.dir, "dir", "d", false, `ignored unless --rm-mode set
+remove empty directories (--rm-mode)`)
+	cmd.Flags().BoolVarP(&root.opts.recursive, "recursive", "r", false, `ignored unless --rm-mode set
+remove directories and their contents recursively (--rm-mode)`)
+	cmd.Flags().BoolVarS(&root.opts.recursive, "R", "R", false, "same as -r")
 
 	cmd.Flags().BoolVar(&root.opts.homeFallback, "home-fallback", env.HOME_TRASH_FALLBACK_COPY, `Enable fallback to home directory trash
 If the deletion of a file in an external file system fails, this option may help.`)
