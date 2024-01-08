@@ -77,12 +77,6 @@ sudo mv ./gtrash /usr/local/bin/gtrash
 brew install umlx5h/tap/gtrash
 ```
 
-### Go install
-
-```
-go install github.com/umlx5h/gtrash@latest
-```
-
 ### Build from source
 
 ```bash
