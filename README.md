@@ -1,5 +1,8 @@
 # gtrash
 
+
+![demo](doc/image/demo.gif)
+
 `gtrash` is a trash CLI manager that fully complies with the [FreeDesktop.org specification](https://specifications.freedesktop.org/trash-spec/trashspec-latest.html).  
 Unlike `rm`, `gtrash` moves files to the system trash can, enabling easy restoration of important files at any time.
 
@@ -8,6 +11,8 @@ If you usually use `rm` in the shell, `gtrash` can serve as a substitute.
 This tool utilizes the system trash can on Linux, enabling seamless integration with other CLI and desktop applications.
 
 Additionally, `gtrash` features a modern TUI interface, making it very intuitive to restore any file.
+
+- Status: Not stable, interface may change in the future.
 
 ## Features
 
@@ -124,7 +129,7 @@ To restore with an interactive TUI, use the `restore` subcommand.
 $ gtrash restore
 ```
 
-<!-- TODO: image -->
+![restore-table](./doc/image/restore_table.jpg)
 
 Within `restore`, multiple files can be selected for restoration.  
 
