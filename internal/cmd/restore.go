@@ -24,6 +24,7 @@ type restoreOptions struct {
 	directory string
 	cwd       bool
 	restoreTo string
+	force     bool
 }
 
 func newRestoreCmd() *restoreCmd {
@@ -64,6 +65,8 @@ func newRestoreCmd() *restoreCmd {
 	cmd.Flags().StringVarP(&root.opts.directory, "directory", "d", "", "Filter by directory")
 	cmd.Flags().BoolVarP(&root.opts.cwd, "cwd", "c", false, "Filter by current working directory")
 	cmd.Flags().StringVar(&root.opts.restoreTo, "restore-to", "", "Restore to this path instead of original path")
+	cmd.Flags().BoolVarP(&root.opts.force, "force", "f", false, `Always execute without confirmation prompt
+This is not necessary if running outside of a terminal`)
 
 	root.cmd = cmd
 	return root
@@ -112,11 +115,11 @@ func restoreCmdRun(args []string, opts restoreOptions) (err error) {
 		fmt.Printf("Will restore to %q instead of original path\n", opts.restoreTo)
 	}
 
-	if isTerminal && !tui.BoolPrompt("Are you sure you want to restore? ") {
+	if !opts.force && isTerminal && !tui.BoolPrompt("Are you sure you want to restore? ") {
 		return errors.New("do nothing")
 	}
 
-	if err := doRestore(box.Files, opts.restoreTo); err != nil {
+	if err := doRestore(box.Files, opts.restoreTo, isTerminal && !opts.force); err != nil {
 		return err
 	}
 
@@ -172,8 +175,8 @@ func checkRestoreDup(files []trash.File) error {
 	return nil
 }
 
-func doRestore(files []trash.File, restoreTo string) error {
-	if !isTerminal {
+func doRestore(files []trash.File, restoreTo string, prompt bool) error {
+	if !prompt {
 		if err := checkRestoreDup(files); err != nil {
 			return err
 		}
@@ -214,7 +217,7 @@ func doRestore(files []trash.File, restoreTo string) error {
 		// Check to see if the file already exists in the destination path.
 		// This is necessary because rename(2) overwrites the file.
 		if _, err := os.Lstat(restorePath); err == nil {
-			if !isTerminal {
+			if !prompt {
 				glog.Errorf("cannot restore %q: restore path alread exists\n", file.OriginalPath)
 				failed = append(failed, file)
 				continue

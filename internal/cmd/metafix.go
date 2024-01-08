@@ -16,7 +16,9 @@ type metafixCmd struct {
 	opts metafixOptions
 }
 
-type metafixOptions struct{}
+type metafixOptions struct {
+	force bool
+}
 
 func newMetafixCmd() *metafixCmd {
 	root := &metafixCmd{}
@@ -43,6 +45,9 @@ func newMetafixCmd() *metafixCmd {
 		},
 	}
 
+	cmd.Flags().BoolVarP(&root.opts.force, "force", "f", false, `Always execute without confirmation prompt
+This is not necessary if running outside of a terminal`)
+
 	root.cmd = cmd
 	return root
 }
@@ -66,7 +71,7 @@ func metafixCmdRun(opts metafixOptions) error {
 	// (those for which trashinfo exists but the file does not).
 	fmt.Printf("\nFound invalid metadata: %d\n", len(box.OrphanMeta))
 
-	if isTerminal && !tui.BoolPrompt("Are you sure you want to remove invalid metadata? ") {
+	if !opts.force && isTerminal && !tui.BoolPrompt("Are you sure you want to remove invalid metadata? ") {
 		return errors.New("do nothing")
 	}
 

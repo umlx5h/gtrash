@@ -210,7 +210,7 @@ func findCmdRun(args []string, opts findOptions) error {
 		if !opts.force && isTerminal && !tui.BoolPrompt("Are you sure you want to restore? ") {
 			return errors.New("do nothing")
 		}
-		if err := doRestore(box.Files, opts.restoreTo); err != nil {
+		if err := doRestore(box.Files, opts.restoreTo, isTerminal && !opts.force); err != nil {
 			return err
 		}
 	}

@@ -17,7 +17,9 @@ type removeCmd struct {
 	opts removeOptions
 }
 
-type removeOptions struct{}
+type removeOptions struct {
+	force bool
+}
 
 func newRemoveCmd() *removeCmd {
 	root := &removeCmd{}
@@ -49,6 +51,9 @@ func newRemoveCmd() *removeCmd {
 		},
 	}
 
+	cmd.Flags().BoolVarP(&root.opts.force, "force", "f", false, `Always execute without confirmation prompt
+This is not necessary if running outside of a terminal`)
+
 	root.cmd = cmd
 	return root
 }
@@ -72,7 +77,7 @@ func removeCmdRun(args []string, opts removeOptions) error {
 	}
 	fmt.Printf("\nFound %d trashed files\n", len(box.Files))
 
-	if isTerminal && !tui.BoolPrompt("Are you sure you want to remove PERMENANTLY? ") {
+	if !opts.force && isTerminal && !tui.BoolPrompt("Are you sure you want to remove PERMENANTLY? ") {
 		return errors.New("do nothing")
 	}
 

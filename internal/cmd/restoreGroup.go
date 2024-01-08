@@ -72,7 +72,7 @@ func restoreGroupCmdRun(args []string, opts restoreGroupOptions) error {
 		return errors.New("do nothing")
 	}
 
-	if err := doRestore(group.Files, ""); err != nil {
+	if err := doRestore(group.Files, "", true); err != nil {
 		return err
 	}
 
