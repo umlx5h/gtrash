@@ -43,8 +43,6 @@ DeletionDate=2023-01-01T00:00:00
 		assert.Equal(t, wantInfo, info)
 	})
 
-	// If a string that starts with “Path=” or “DeletionDate=” occurs
-	// several times, the first occurence is to be used.
 	t.Run("contain_space_between_key_value", func(t *testing.T) {
 		info, err := NewInfo(strings.NewReader(`[Trash Info]
 DeletionDate = 2023-01-01T00:00:00
@@ -53,6 +51,8 @@ Path = /dummy`))
 		assert.Equal(t, wantInfo, info)
 	})
 
+	// If a string that starts with “Path=” or “DeletionDate=” occurs
+	// several times, the first occurence is to be used.
 	t.Run("high_priority_to_first_key_pair", func(t *testing.T) {
 		info, err := NewInfo(strings.NewReader(`[Trash Info]
 Path=/dummy

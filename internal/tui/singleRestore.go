@@ -65,6 +65,9 @@ func newSingleRestoreModel(groups []trash.Group) singleRestoreModel {
 	if noWidth <= 1 {
 		noWidth = 2
 	}
+	if isKonsole {
+		noWidth += 1
+	}
 
 	rows := make([]table.Row, len(groups))
 	for i, g := range groups {
@@ -87,6 +90,10 @@ func newSingleRestoreModel(groups []trash.Group) singleRestoreModel {
 	paddingWidth := 5 * 2 // (columns + 1) * 2
 
 	fixedWidth := noWidth + dateWidth + filesWidth + paddingWidth
+	// make table shorter
+	if isKonsole {
+		fixedWidth += 6
+	}
 
 	pathWidth := width - fixedWidth
 

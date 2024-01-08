@@ -89,10 +89,12 @@ func ScanTrashDirs() []TrashDir {
 		return trashDirList
 	}
 
+	uid := strconv.Itoa(os.Getuid())
+
 	// Check to see if the .Trash directory exists
 	for _, topDir := range topDirs {
 		// 2. check $topDir/.Trash/$uid
-		trashDir := filepath.Join(topDir, ".Trash", strconv.Itoa(os.Getuid()))
+		trashDir := filepath.Join(topDir, ".Trash", uid)
 
 		if _, err := os.Stat(trashDir); err == nil {
 			trashDirList = append(trashDirList, TrashDir{
@@ -104,7 +106,7 @@ func ScanTrashDirs() []TrashDir {
 		}
 
 		// 3. check $topDir/Trash-$uid
-		trashDir = filepath.Join(topDir, fmt.Sprintf(".Trash-%d", os.Getuid()))
+		trashDir = filepath.Join(topDir, fmt.Sprintf(".Trash-%s", uid))
 		if _, err = os.Stat(trashDir); err == nil {
 			trashDirList = append(trashDirList, TrashDir{
 				Root:    topDir,

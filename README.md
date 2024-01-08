@@ -504,6 +504,27 @@ $ ls ~/.local/share/Trash/info/file1.trashinfo
 ls: cannot access '/home/user/.local/share/Trash/info/file1.trashinfo': No such file or directory
 ```
 
+### The display in the TUI is corrupted
+
+It seems that the table in TUI may be corrupted on certain terminals.  
+The display of the library used itself may be corrupted and may not be able to be fixed.  
+In that case, I recommend migrating the terminal.
+
+Terminal confirmed that it cannot be fixed
+* KDE Konsole
+
+Terminal confirmed to work
+* Wezterm
+* Alacritty
+* Kitty
+* GNOME Terminal
+* Xfce Terminal
+* Windows Terminal
+* Mac Terminal
+* Mac iTerm2
+
+If you find a problem, please open an ticket.
+
 ## Tips
 
 ### Filtering by the current working directory or specific directory

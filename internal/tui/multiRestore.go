@@ -40,6 +40,9 @@ var inputCursorStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("70"))
 
 var baseHelp = help.New()
 
+// 'Konsole Terminal' will collapse the table display, but if the width is not shortened, the layout will collapse even further, so it should be handled individually.
+var isKonsole bool
+
 var (
 	focusRowStyle    = table.DefaultStyles()
 	notFocusRowStyle = table.DefaultStyles()
@@ -86,6 +89,10 @@ func init() {
 	baseHelp.Styles.FullKey = baseHelp.Styles.ShortKey.Copy()
 	baseHelp.Styles.FullDesc = baseHelp.Styles.ShortDesc.Copy()
 	baseHelp.Styles.FullSeparator = baseHelp.Styles.ShortSeparator.Copy()
+
+	if _, ok := os.LookupEnv("KONSOLE_VERSION"); ok {
+		isKonsole = true
+	}
 }
 
 var baseKeymap = keymap{
@@ -289,6 +296,9 @@ func makeFilterTables(files []trash.File) (left, right filterTable, fixedWidth, 
 	if noWidth <= 1 {
 		noWidth = 2
 	}
+	if isKonsole {
+		noWidth += 1
+	}
 
 	rows := make([]table.Row, len(files))
 	for i, f := range files {
@@ -305,6 +315,11 @@ func makeFilterTables(files []trash.File) (left, right filterTable, fixedWidth, 
 	paddingWidth := 4 * 2 // (columns + 1) * 2
 
 	fixedWidth = noWidth + dateWidth + paddingWidth
+
+	// make table shorter
+	if isKonsole {
+		fixedWidth += 4
+	}
 	pathWidth := (width / 2) - fixedWidth
 
 	// Must be separate instances to prevent data race
