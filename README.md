@@ -1,5 +1,6 @@
 # gtrash
 
+<h5 align="center">Modern Trash CLI manager for Linux system trash written in Go</h5>
 
 ![demo](doc/image/demo.gif)
 
@@ -12,7 +13,17 @@ This tool utilizes the system trash can on Linux, enabling seamless integration 
 
 Additionally, `gtrash` features a modern TUI interface, making it very intuitive to restore any file.
 
-- Status: Not stable, interface may change in the future.
+
+## Table of Contents
+- [Features](#features)
+- [Supported OS](#supported-os)
+- [Installation](#installation)
+- [Usage](#usage)
+- [How it works](#how-it-works)
+- [FAQ](#faq)
+- [Tips](#tips)
+- [Configuration](#configuration)
+- [Related projects](#related-projects)
 
 ## Features
 
@@ -28,7 +39,10 @@ Additionally, `gtrash` features a modern TUI interface, making it very intuitive
 - Safe and Ergonomic
   - Ensures safety by displaying a list and confirmation prompt whenever a file is permanently deleted.
 
+
 ## Supported OS
+
+- Status: Not stable, interface may change in the future.
 
 ### Linux
 Supported
