@@ -37,11 +37,11 @@ changelog:
       - "^docs:"
       - "^test:"
 
-# brews:
-#   - repository:
-#       owner: umlx5h
-#       name: homebrew-tap-test
-#       token: "{{ .Env.TAP_GITHUB_TOKEN }}"
-#     homepage: "https://github.com/umlx5h/gtrash"
-#     description: "Trash CLI Manager written in Go"
-#     license: "MIT"
+brews:
+  - repository:
+      owner: umlx5h
+      name: homebrew-tap
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+    homepage: "https://github.com/umlx5h/gtrash"
+    description: "Trash CLI Manager written in Go"
+    license: "MIT"
