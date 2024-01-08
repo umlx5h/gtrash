@@ -54,15 +54,15 @@
 # Display:
 #   Hide                            Hide the subsequent commands from the output
 #   Show                            Show the subsequent commands in the output
-
-Output demo.gif
+Output ../demo.gif
+# Output ../demo.webm
 
 Require gtrash
 
 Set Shell "zsh"
-Set FontSize 18
-Set Width 1200
-Set Height 600
+Set FontSize 24
+Set Width 1240
+Set Height 800
 Set Theme "Snazzy"
 
 Hide
@@ -79,8 +79,8 @@ Type "ls" Sleep 500ms Enter
 Type "gtrash find" Enter
 Sleep 1s
 
-Type "# Lets restore files with TUI interface!" Sleep 80ms Enter
-Type "gtrash restore" Sleep 200ms Enter
+Type "# Lets restore files with TUI interface!" Sleep 50ms Enter
+Type "gtrash restore" Sleep 300ms Enter
 
 Sleep 2s
 
@@ -96,8 +96,8 @@ Type "ls" Sleep 100ms Enter
 
 Sleep 1s
 
-Type "# Lets restore deleted files all at once!" Sleep 80ms Enter
-Type "gtrash restore-group" Sleep 200ms Enter
+Type "# Lets restore deleted files all at once!" Sleep 50ms Enter
+Type "gtrash restore-group" Sleep 300ms Enter
 
 Sleep 2s Enter Sleep 2s Type "y" Sleep 300ms
 Type "ls" Enter

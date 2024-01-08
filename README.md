@@ -1,6 +1,6 @@
 # gtrash
 
-<h5 align="center">Modern Trash CLI manager for Linux system trash written in Go</h5>
+<h5 align="center">A Modern Trash CLI manager for Linux system trash written in Go</h5>
 
 ![demo](doc/image/demo.gif)
 
