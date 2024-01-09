@@ -329,7 +329,7 @@ However, some users may prefer the `rm` behavior. In such cases, enable the abov
 ```bash
 # To delete a folder, -r or -d is required.
 $ gtrash put --rm-mode dir1/
-gtrash: cannot remove "dir1/": Is a directory
+gtrash: cannot trash "dir1/": Is a directory
 
 $ gtrash put --rm-mode -r dir1/
 ```

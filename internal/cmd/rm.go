@@ -72,7 +72,7 @@ func removeCmdRun(args []string, opts removeOptions) error {
 
 	for _, arg := range args {
 		if box.HitByPath(arg) == 0 {
-			glog.Errorf("cannot remove %q: not found in trashcan\n", arg)
+			glog.Errorf("cannot trash %q: not found in trashcan\n", arg)
 		}
 	}
 	fmt.Printf("\nFound %d trashed files\n", len(box.Files))
@@ -95,7 +95,7 @@ func doRemove(files []trash.File) error {
 		slog.Debug("removing a trashed file", "path", file.TrashPath)
 		if err := os.RemoveAll(file.TrashPath); err != nil {
 			if !errors.Is(err, os.ErrNotExist) {
-				glog.Errorf("cannot remove %q: remove: %s\n", file.TrashPath, err)
+				glog.Errorf("cannot trash %q: remove: %s\n", file.TrashPath, err)
 				failed = append(failed, file)
 				continue
 			}

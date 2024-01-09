@@ -152,10 +152,10 @@ func putCmdRun(args []string, opts putOptions) error {
 		if err != nil {
 			if errors.Is(err, fs.ErrNotExist) {
 				if !opts.force {
-					glog.Errorf("cannot remove %q: No such file or directory\n", arg)
+					glog.Errorf("cannot trash %q: No such file or directory\n", arg)
 				}
 			} else {
-				glog.Errorf("cannot remove %q: %s\n", err)
+				glog.Errorf("cannot trash %q: %s\n", err)
 			}
 			continue
 		}
@@ -163,7 +163,7 @@ func putCmdRun(args []string, opts putOptions) error {
 		if opts.rmMode {
 			if st.IsDir() {
 				if !opts.recursive && !opts.dir {
-					glog.Errorf("cannot remove %q: Is a directory\n", arg)
+					glog.Errorf("cannot trash %q: Is a directory\n", arg)
 					continue
 				}
 
@@ -171,12 +171,12 @@ func putCmdRun(args []string, opts putOptions) error {
 					// check if directory is empty
 					empty, err := posix.DirEmpty(arg)
 					if err != nil {
-						glog.Errorf("cannot remove %q: check dir empty: %s\n", arg, err)
+						glog.Errorf("cannot trash %q: check dir empty: %s\n", arg, err)
 						continue
 					}
 
 					if !empty {
-						glog.Errorf("cannot remove %q: Directory not empty\n", arg)
+						glog.Errorf("cannot trash %q: Directory not empty\n", arg)
 						continue
 					}
 				}
@@ -203,7 +203,7 @@ func putCmdRun(args []string, opts putOptions) error {
 
 		path, err := filepath.Abs(arg)
 		if err != nil {
-			glog.Errorf("cannot remove %q: get abspath: %s\n", arg, err)
+			glog.Errorf("cannot trash %q: get abspath: %s\n", arg, err)
 			continue
 		}
 
@@ -219,7 +219,7 @@ func putCmdRun(args []string, opts putOptions) error {
 
 		if err != nil {
 			if !opts.homeFallback || (homeDir == nil && externalDir == nil) {
-				glog.Errorf("cannot remove %q: lookup trash directory: %s\n", arg, err)
+				glog.Errorf("cannot trash %q: lookup trash directory: %s\n", arg, err)
 				continue
 			}
 
@@ -233,7 +233,7 @@ func putCmdRun(args []string, opts putOptions) error {
 			// external trash only uses rename, not copy
 			if err := trashFile(*externalDir, path, &deleteTime, false); err != nil {
 				if !opts.homeFallback {
-					glog.Errorf("cannot remove %q: %s\n", arg, err)
+					glog.Errorf("cannot trash %q: %s\n", arg, err)
 					continue
 				}
 
@@ -251,7 +251,7 @@ func putCmdRun(args []string, opts putOptions) error {
 			slog.Debug("will use home trash, will use rename(2) to move", "trashDir", homeDir.Dir)
 		}
 		if err := trashFile(*homeDir, path, &deleteTime, opts.homeFallback || env.ONLY_HOME_TRASH); err != nil {
-			glog.Errorf("cannot remove %q: %s\n", arg, err)
+			glog.Errorf("cannot trash %q: %s\n", arg, err)
 			continue
 		}
 		usedDir = *homeDir
