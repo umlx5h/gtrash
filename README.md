@@ -541,6 +541,17 @@ If you find a problem, please open an ticket.
 
 ## Tips
 
+### Shell Integration
+
+`gtrash` supports `bash`, `zsh`, `fish` shell integration.  
+See `--help` for further details.
+
+```bash
+gtrash completion bash --help
+gtrash completion zsh --help
+gtrash completion fish --help
+```
+
 ### Filtering by the current working directory or specific directory
 
 By default, `find` and `restore` display all files, not limited to the current directory.  
