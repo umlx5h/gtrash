@@ -109,7 +109,7 @@ If the deletion of a file in an external file system fails, this option may help
 }
 
 func putCmdRun(args []string, opts putOptions) error {
-	if debug {
+	if isDebug {
 		opts.verbose = true
 	}
 	if opts.force {

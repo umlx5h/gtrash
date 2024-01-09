@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"runtime/debug"
 	"strings"
 
 	"github.com/lmittmann/tint"
@@ -59,7 +60,7 @@ func (v Version) Print() string {
 
 // global options
 var (
-	debug bool
+	isDebug bool
 )
 
 type rootCmd struct {
@@ -67,6 +68,13 @@ type rootCmd struct {
 }
 
 func newRootCmd(version Version) *rootCmd {
+	// if version is not set, probably go install
+	if version.Version == "unknown" {
+		if info, ok := debug.ReadBuildInfo(); ok {
+			version.Version = info.Main.Version
+		}
+	}
+
 	root := &rootCmd{}
 	cmd := &cobra.Command{
 		Use:           progName,
@@ -80,7 +88,7 @@ func newRootCmd(version Version) *rootCmd {
 			lvl := &slog.LevelVar{}
 
 			lvl.Set(slog.LevelWarn)
-			if debug {
+			if isDebug {
 				lvl.Set(slog.LevelDebug)
 			}
 			// colored format
@@ -101,7 +109,7 @@ func newRootCmd(version Version) *rootCmd {
 	}
 
 	cmd.SetVersionTemplate("{{.Version}}")
-	cmd.PersistentFlags().BoolVar(&debug, "debug", false, "debug mode")
+	cmd.PersistentFlags().BoolVar(&isDebug, "debug", false, "debug mode")
 	cmd.PersistentFlags()
 
 	// disable help subcommand
