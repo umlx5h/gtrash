@@ -301,11 +301,15 @@ func (b *Box) Open() error {
 		}
 
 		slog.Debug("starting to read directory entries", "file_entries", len(fileEntries), "info_entries", len(dirents))
-		files := b.getFiles(dirents, fileEntries, trashDir, dirCache)
+
+		// True if the cache expires or an entry is added.
+		var dirCacheUpdated bool
+
+		files := b.getFiles(dirents, fileEntries, trashDir, dirCache, &dirCacheUpdated)
 		slog.Debug("found trashed files", "number", len(files), "trashDir", trashDir.Dir)
 
 		// save directorysize cache
-		if dirCache != nil {
+		if dirCache != nil && dirCacheUpdated {
 			slog.Debug("saving directorysizes cache", "path", directorySizesPath, "isTruncate", b.noFilterApply)
 			// When all selections are made, the cache file is rewritten.
 			// (To delete old entries that are no longer needed.)
@@ -328,7 +332,7 @@ func (b *Box) Open() error {
 	return nil
 }
 
-func (b *Box) getFiles(dirents []fs.DirEntry, fileEntries map[string]bool, trashDir xdg.TrashDir, dirCache xdg.DirCache) []File {
+func (b *Box) getFiles(dirents []fs.DirEntry, fileEntries map[string]bool, trashDir xdg.TrashDir, dirCache xdg.DirCache, dirCacheUpdated *bool) []File {
 	var files []File
 	for _, ent := range dirents {
 		if ent.Type().IsRegular() && strings.HasSuffix(ent.Name(), ".trashinfo") {
@@ -485,6 +489,7 @@ func (b *Box) getFiles(dirents []fs.DirEntry, fileEntries map[string]bool, trash
 					} else {
 						slog.Debug("calculating directory size", "reason", "CACHE_STALE", "trashPath", file.TrashPath)
 					}
+					*dirCacheUpdated = true
 
 					// calculate directory size
 					s, err := posix.DirSizeFallback(file.TrashPath)
