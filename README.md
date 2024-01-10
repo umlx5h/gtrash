@@ -363,10 +363,10 @@ As `gtrash` isn't fully compatible with `rm`, it's prudent to establish differen
 Consider setting up alternative aliases, such as:
 
 ```bash
-alias gp='gtrash put'
-alias gm='gtrash put'
-alias tp='gtrash put'
-alias tm='gtrash put'
+alias gp='gtrash put' # gtrash put
+alias gm='gtrash put' # gtrash move (easy to change to rm)
+alias tp='gtrash put' # trash put
+alias tm='gtrash put' # trash move (easy to change to rm)
 ```
 
 If you are in the habit of using rm, consider creating an alias that displays a cautionary message.
@@ -665,8 +665,17 @@ Refer to the [Configuration](doc/configuration.md).
 
 ## Related projects
 
+### Using system trash can
+
 * [andreafrancia/trash-cli](https://github.com/andreafrancia/trash-cli)
 * [oberblastmeister/trashy](https://github.com/oberblastmeister/trashy)
 * [rushsteve1/trash-d](https://github.com/rushsteve1/trash-d)
 
-[Comparison Table](doc/alternatives.md)
+For a comparison, You can see [alternatives.md](doc/alternatives.md).
+
+### Not using system trash can
+
+* [nivekuil/rip](https://github.com/nivekuil/rip)
+* [babarot/gomi](https://github.com/babarot/gomi)
+
+This program is mainly inspired by [babarot/gomi](https://github.com/babarot/gomi).
