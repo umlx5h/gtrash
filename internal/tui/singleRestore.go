@@ -304,9 +304,9 @@ func (m singleRestoreModel) viewMetadata() string {
 	selected, _ := strconv.Atoi(row[0])
 	g := m.groups[selected-1]
 
-	body.WriteString(greyStyle.Render("DeletedAt:      ") + "\t" + fmt.Sprintf("%s (%s)", g.DeletedAt.Format(time.DateTime), row[1]) + "\n")
-	body.WriteString(greyStyle.Render("RestoreDir:     ") + "\t" + g.Dir + "\n")
-	body.WriteString(greyStyle.Render("Number of Files:") + "\t" + row[2] + "\n")
+	body.WriteString(greyStyle.Render("DeletedAt:          ") + fmt.Sprintf("%s (%s)", g.DeletedAt.Format(time.DateTime), row[1]) + "\n")
+	body.WriteString(greyStyle.Render("RestoreDir:         ") + g.Dir + "\n")
+	body.WriteString(greyStyle.Render("Number of Files:    ") + row[2] + "\n")
 	body.WriteString(greyStyle.Render("Files:") + "\n")
 
 	// TODO: make scrollable

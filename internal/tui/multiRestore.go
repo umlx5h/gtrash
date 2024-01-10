@@ -842,13 +842,13 @@ func (m multiRestoreModel) viewMetadata() string {
 
 	f := m.files[ft.getSelectedIdx()]
 
-	body.WriteString(greyStyle.Render("FileName:    ") + "\t" + f.Name + "\n")
-	body.WriteString(greyStyle.Render("OriginalPath:") + "\t" + f.OriginalPathFormat(false, true) + "\n")
-	body.WriteString(greyStyle.Render("TrashPath:   ") + "\t" + f.TrashPathColor() + "\n")
-	body.WriteString(greyStyle.Render("DeletedAt:   ") + "\t" + fmt.Sprintf("%s (%s)", f.DeletedAt.Format(time.DateTime), ft.t.SelectedRow()[1]) + "\n")
+	body.WriteString(greyStyle.Render("FileName:        ") + f.Name + "\n")
+	body.WriteString(greyStyle.Render("OriginalPath:    ") + f.OriginalPathFormat(false, true) + "\n")
+	body.WriteString(greyStyle.Render("TrashPath:       ") + f.TrashPathColor() + "\n")
+	body.WriteString(greyStyle.Render("DeletedAt:       ") + fmt.Sprintf("%s (%s)", f.DeletedAt.Format(time.DateTime), ft.t.SelectedRow()[1]) + "\n")
 
 	if m.showPreview {
-		body.WriteString(greyStyle.Render("Preview:     ") + "\t" + posix.FileHead(f.TrashPath, m.width, m.height-m.tableHeight-paddingHeight-6))
+		body.WriteString(greyStyle.Render("Preview:         ") + posix.FileHead(f.TrashPath, m.width, m.height-m.tableHeight-paddingHeight-6))
 	}
 
 	return body.String()
