@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"os"
 
+	"github.com/charmbracelet/lipgloss"
 	"github.com/umlx5h/go-runewidth"
 )
 
@@ -77,7 +78,13 @@ func FileHead(path string, width int, maxLines int) string {
 			if err != nil {
 				return "(error: open directory)"
 			}
-			lines = append(lines, fmt.Sprintf("%s %s", dinfo.Mode().Perm().String(), runewidth.Truncate(dir.Name(), width-14, "…")))
+			name := runewidth.Truncate(dir.Name(), width-15, "…")
+			if dir.IsDir() {
+				// folder is blue color
+				name = lipgloss.NewStyle().Foreground(lipgloss.Color("12")).Render(name)
+			}
+			l := fmt.Sprintf("%s  %s", dinfo.Mode().Perm().String(), name)
+			lines = append(lines, l)
 		}
 	case fi.Mode().IsRegular():
 		f, err := os.Open(path)
