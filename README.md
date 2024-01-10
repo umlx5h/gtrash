@@ -422,8 +422,11 @@ alias gp="gtrash put"
 alias g="gtrash"
 ```
 
-You can also change the binary name from the default if you prefer.  
-(However, the binary must be manually copied to be installed.)
+Or you could setup a symbolic link.
+
+```bash
+sudo ln -s /usr/local/bin/gtrash /usr/local/bin/g
+```
 
 ### What happens when I run it with sudo?
 

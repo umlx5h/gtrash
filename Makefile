@@ -1,4 +1,4 @@
-.PHONY: test itest
+.PHONY: clean test itest lint
 
 build:
 	go build
@@ -9,6 +9,9 @@ clean:
 	rm -f coverage.txt coverage.html
 
 test-all: clean test itest report-coverage
+
+lint:
+	golangci-lint run
 
 test:
 	mkdir -p coverage
