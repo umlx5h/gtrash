@@ -91,11 +91,11 @@ func DefaultKeyMap() KeyMap {
 			key.WithHelp("↓/j", "down"),
 		),
 		PageUp: key.NewBinding(
-			key.WithKeys("pgup"),
+			key.WithKeys("pgup", "ctrl+b"),
 			key.WithHelp("pgup", "page up"),
 		),
 		PageDown: key.NewBinding(
-			key.WithKeys("pgdown"),
+			key.WithKeys("pgdown", "ctrl+f"),
 			key.WithHelp("pgdn", "page down"),
 		),
 		HalfPageUp: key.NewBinding(

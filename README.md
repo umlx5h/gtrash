@@ -13,7 +13,7 @@ This tool utilizes the system trash can on Linux, enabling seamless integration 
 
 Additionally, `gtrash` features a modern TUI interface, making it very intuitive to restore any file.
 
-The interface is made with awesome [bubbletea](https://github.com/charmbracelet/bubbletea) TUI framework.
+The interface is made with an awesome [bubbletea](https://github.com/charmbracelet/bubbletea) TUI framework.
 
 ## Table of Contents
 - [Features](#features)
