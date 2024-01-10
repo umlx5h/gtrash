@@ -44,7 +44,7 @@ func newSummaryCmd() *summaryCmd {
 	return root
 }
 
-func summaryCmdRun(opts summaryOptions) error {
+func summaryCmdRun(_ summaryOptions) error {
 	box := trash.NewBox(
 		trash.WithGetSize(true),
 	)

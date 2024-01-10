@@ -75,7 +75,7 @@ func newPutCmd() *putCmd {
 		Args:          cobra.MinimumNArgs(1),
 		SilenceUsage:  true,
 		SilenceErrors: true,
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			if err := putCmdRun(args, root.opts); err != nil {
 				return err
 			}

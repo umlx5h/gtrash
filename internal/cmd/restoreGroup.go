@@ -36,9 +36,11 @@ func newRestoreGroupCmd() *restoreGroupCmd {
   Refer below for detailed information.
   ref: https://github.com/umlx5h/gtrash#how-does-the-restore-group-subcommand-work
 `,
-		SilenceUsage: true,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := restoreGroupCmdRun(args, root.opts); err != nil {
+		SilenceUsage:      true,
+		Args:              cobra.NoArgs,
+		ValidArgsFunction: cobra.NoFileCompletions,
+		RunE: func(_ *cobra.Command, _ []string) error {
+			if err := restoreGroupCmdRun(root.opts); err != nil {
 				return err
 			}
 			if glog.ExitCode() > 0 {
@@ -52,7 +54,7 @@ func newRestoreGroupCmd() *restoreGroupCmd {
 	return root
 }
 
-func restoreGroupCmdRun(args []string, opts restoreGroupOptions) error {
+func restoreGroupCmdRun(_ restoreGroupOptions) error {
 	box := trash.NewBox()
 	if err := box.Open(); err != nil {
 		return err
