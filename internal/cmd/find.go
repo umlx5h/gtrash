@@ -215,7 +215,7 @@ func findCmdRun(args []string, opts findOptions) error {
 	fmt.Printf("\nFound %d trashed files\n", len(box.Files))
 
 	if opts.doRemove {
-		if !opts.force && isTerminal && !tui.BoolPrompt("Are you sure you want to remove PERMENANTLY? ") {
+		if !opts.force && isTerminal && !tui.BoolPrompt("Are you sure you want to remove PERMANENTLY? ") {
 			return errors.New("do nothing")
 		}
 		doRemove(box.Files)
