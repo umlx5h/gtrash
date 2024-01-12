@@ -22,6 +22,7 @@ const (
 	trashDirTypeHome        trashDirType = "HOME"         // $XDG_DATA_HOME/Trash
 	trashDirTypeExternal    trashDirType = "EXTERNAL"     // $root/.Trash/$uid
 	trashDirTypeExternalAlt trashDirType = "EXTERNAL_ALT" // $root/.Trash-$uid
+	trashDirTypeManual      trashDirType = "MANUAL"       // any directory, specify by --trash-dir
 )
 
 type TrashDir struct {
@@ -60,6 +61,14 @@ func (d TrashDir) CreateDir() error {
 	}
 
 	return nil
+}
+
+func NewTrashDirManual(dir string) TrashDir {
+	return TrashDir{
+		Root:    filepath.Dir(dir),
+		Dir:     dir,
+		dirType: trashDirTypeManual,
+	}
 }
 
 // Scan and returns trash directories from all mountpoints

@@ -81,14 +81,12 @@ func removeCmdRun(args []string, opts removeOptions) error {
 		return errors.New("do nothing")
 	}
 
-	if err := doRemove(box.Files); err != nil {
-		return err
-	}
+	doRemove(box.Files)
 
 	return nil
 }
 
-func doRemove(files []trash.File) error {
+func doRemove(files []trash.File) {
 	var failed []trash.File
 
 	for _, file := range files {
@@ -111,6 +109,4 @@ func doRemove(files []trash.File) error {
 		fmt.Printf("Following %d files could not be deleted.\n", len(failed))
 		listFiles(failed, false, true)
 	}
-
-	return nil
 }

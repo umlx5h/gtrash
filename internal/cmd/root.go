@@ -130,6 +130,7 @@ func newRootCmd(version Version) *rootCmd {
 		newRemoveCmd().cmd,
 		newSummaryCmd().cmd,
 		newMetafixCmd().cmd,
+		newPruneCmd().cmd,
 	)
 	root.cmd = cmd
 	return root
