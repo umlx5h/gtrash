@@ -192,7 +192,7 @@ func pruneCmdRun(opts pruneOptions) error {
 			fmt.Printf("Current: %s, Deleted: %s, After: %s, Specified: %s\n\n", humanize.Bytes(total), humanize.Bytes(deleted), humanize.Bytes(total-deleted), humanize.Bytes(opts.maxTotalSize))
 		}
 
-		if !opts.force && isTerminal && !tui.BoolPrompt("Are you sure you want to remove PERMENANTLY? ") {
+		if !opts.force && isTerminal && !tui.BoolPrompt("Are you sure you want to remove PERMANENTLY? ") {
 			return errors.New("do nothing")
 		}
 		doRemove(files)
