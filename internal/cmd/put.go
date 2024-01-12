@@ -324,7 +324,7 @@ func trashFile(trashDir xdg.TrashDir, path string, deleteTime *time.Time, fallba
 			return nil
 		}
 
-		// delete corrensponding .trashinfo file
+		// delete corresponding .trashinfo file
 		_ = deleteFn()
 
 		return fmt.Errorf("move: %w", err)

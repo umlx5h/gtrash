@@ -58,7 +58,7 @@ func init() {
 
 			// Ensure to have directory in advance
 			if err := os.MkdirAll(path, 0o700); err != nil {
-				fmt.Fprintf(os.Stderr, "ENV $GTRASH_HOME_TRASH_DIR coult not be created: %s", err)
+				fmt.Fprintf(os.Stderr, "ENV $GTRASH_HOME_TRASH_DIR could not be created: %s", err)
 				os.Exit(1)
 			}
 

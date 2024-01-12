@@ -28,7 +28,7 @@ func DirSize(path string) (int64, error) {
 	return block * 512, err
 }
 
-// Look at both block-size and apparant-size and choose the larger one.
+// Look at both block-size and apparent-size and choose the larger one.
 // Because there are file systems for which block size cannot be obtained.
 // max(du -sB1, du -sb)
 func DirSizeFallback(path string) (int64, error) {

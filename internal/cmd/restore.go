@@ -218,7 +218,7 @@ func doRestore(files []trash.File, restoreTo string, prompt bool) error {
 		// This is necessary because rename(2) overwrites the file.
 		if _, err := os.Lstat(restorePath); err == nil {
 			if !prompt {
-				glog.Errorf("cannot restore %q: restore path alread exists\n", file.OriginalPath)
+				glog.Errorf("cannot restore %q: restore path already exists\n", file.OriginalPath)
 				failed = append(failed, file)
 				continue
 			}

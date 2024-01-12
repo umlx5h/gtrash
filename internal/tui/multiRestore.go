@@ -175,7 +175,7 @@ func (m *multiRestoreModel) updateHit() {
 	m.restoreTable.updateInputPrompt(false)
 }
 
-// Convert from rows to an array of indice
+// Convert from rows to an array of indices
 func (t *filterTable) getIndices() []int {
 	rows := t.t.Rows()
 	if len(rows) == 0 {

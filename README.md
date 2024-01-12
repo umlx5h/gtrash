@@ -233,7 +233,7 @@ The files are moved to the `files` directory, while metadata is stored in the `i
 ```bash
 $ gtrash put file1
 
-# Records meta infomation
+# Records meta information
 $ cat ~/.local/share/Trash/info/file1.trashinfo
 [Trash Info]
 Path=/home/user/file1
@@ -485,7 +485,7 @@ In such cases, use the `restore` subcommand to select specific files.
 ```bash
 $ gtrash put file1
 
-# Records meta infomation
+# Records meta information
 $ cat ~/.local/share/Trash/info/file1.trashinfo
 [Trash Info]
 Path=/home/user/file1
