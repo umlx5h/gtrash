@@ -191,7 +191,13 @@ func findCmdRun(args []string, opts findOptions) error {
 		trash.WithTrashDir(opts.trashDir),
 	)
 	if err := box.Open(); err != nil {
-		return err
+		// no error only remove mode (consider executing via batch)
+		if opts.doRemove && errors.Is(err, trash.ErrNotFound) {
+			fmt.Printf("do nothing: %s\n", err)
+			return nil
+		} else {
+			return err
+		}
 	}
 
 	listFiles(box.Files, box.GetSize, opts.showTrashPath)
@@ -212,9 +218,7 @@ func findCmdRun(args []string, opts findOptions) error {
 		if !opts.force && isTerminal && !tui.BoolPrompt("Are you sure you want to remove PERMENANTLY? ") {
 			return errors.New("do nothing")
 		}
-		if err := doRemove(box.Files); err != nil {
-			return err
-		}
+		doRemove(box.Files)
 
 	} else if opts.doRestore {
 		if opts.restoreTo != "" {

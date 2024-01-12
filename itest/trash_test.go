@@ -86,7 +86,7 @@ func TestTrashAllType(t *testing.T) {
 			cmd = exec.Command(execBinary, "find")
 			out, err = cmd.CombinedOutput()
 			mustError(t, err, string(out))
-			assertContains(t, string(out), "not found trashed files", "should not list deleted file")
+			assertContains(t, string(out), "not found: trashed files", "should not list deleted file")
 		})
 	}
 }

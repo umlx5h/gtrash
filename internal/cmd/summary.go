@@ -83,7 +83,7 @@ func summaryCmdRun(_ summaryOptions) error {
 		totalItem += item
 	}
 
-	if len(box.FilesByTrashDir) > 1 {
+	if len(box.TrashDirs) > 1 {
 		fmt.Printf("\n[total]\n")
 		fmt.Printf("item: %d\n", totalItem)
 		fmt.Printf("size: %s\n", humanize.Bytes(uint64(totalSize)))
