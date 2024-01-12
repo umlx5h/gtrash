@@ -62,6 +62,8 @@ type Box struct {
 	sizeHuman  string // human size (e.g. 10MB)
 	sizeLarger bool   // if true, filter by size > X
 
+	trashDir string // $HOME/.local/share/Trash
+
 	// Whether to use stat(2) to get size and mode
 	GetSize       bool
 	noFilterApply bool // true if select all trashcan
@@ -87,6 +89,12 @@ type BoxOption func(*Box)
 func WithAscend(ascend bool) BoxOption {
 	return func(b *Box) {
 		b.ascend = ascend
+	}
+}
+
+func WithTrashDir(trashDir string) BoxOption {
+	return func(b *Box) {
+		b.trashDir = trashDir
 	}
 }
 
@@ -196,7 +204,7 @@ func (b *Box) checkOptions() error {
 			for i, q := range b.queries {
 				g, err := glob.Compile(q)
 				if err != nil {
-					return fmt.Errorf("glob syntax in query is not valid: %q: %q", q, err)
+					return fmt.Errorf("glob syntax in query is not valid: %q: %w", q, err)
 				}
 				globs[i] = g
 			}
@@ -209,7 +217,7 @@ func (b *Box) checkOptions() error {
 	if b.sizeHuman != "" {
 		byte, err := humanize.ParseBytes(b.sizeHuman)
 		if err != nil {
-			return fmt.Errorf("--size unit is invalid: %q", err)
+			return fmt.Errorf("--size unit is invalid: %w", err)
 		}
 		b.size = byte
 	}
@@ -217,6 +225,26 @@ func (b *Box) checkOptions() error {
 	// set GetSize true based options
 	if !b.GetSize {
 		b.GetSize = b.sizeHuman != "" || b.sortBy == SortBySize
+	}
+
+	// validate as absolute path and normalize and check existence
+	if b.trashDir != "" {
+		// validate
+		if !filepath.IsAbs(b.trashDir) {
+			return fmt.Errorf("--trash-dir is not absolute path")
+		}
+
+		// normalize
+		b.trashDir, _ = filepath.Abs(b.trashDir)
+
+		// check existence
+		if fi, err := os.Stat(b.trashDir); err != nil {
+			return fmt.Errorf("--trash-dir must be a existing directory: %w", err)
+		} else {
+			if !fi.IsDir() {
+				return fmt.Errorf("--trash-dir must be a directory")
+			}
+		}
 	}
 
 	// check if select all trashcan
@@ -227,19 +255,30 @@ func (b *Box) checkOptions() error {
 	return nil
 }
 
+var ErrNotFound = errors.New("not found")
+
 func (b *Box) Open() error {
 	// validation Box options
 	if err := b.checkOptions(); err != nil {
 		return err
 	}
 
-	slog.Debug("scanning trash directories")
-	// Retrieve trash from all mount points
-	trashDirs := xdg.ScanTrashDirs()
-	if len(trashDirs) == 0 {
-		return fmt.Errorf("not found trashDirs")
+	var trashDirs []xdg.TrashDir
+
+	if b.trashDir == "" {
+		// Automatically searches for trash can paths by default
+		slog.Debug("scanning trash directories")
+		// Retrieve trash from all mount points
+		trashDirs = xdg.ScanTrashDirs()
+		if len(trashDirs) == 0 {
+			return fmt.Errorf("%w: trash directories", ErrNotFound)
+		}
+		slog.Debug("found trash directories", "number", len(trashDirs), "trashDirs", trashDirs)
+	} else {
+		// If --trash-dir is specified, it is used as is.
+		slog.Debug("using manual trash directory", "trashDir", b.trashDir)
+		trashDirs = []xdg.TrashDir{xdg.NewTrashDirManual(b.trashDir)}
 	}
-	slog.Debug("found trash directories", "number", len(trashDirs), "trashDirs", trashDirs)
 
 	for _, trashDir := range trashDirs {
 		slog.Debug("starting to read trashDir", "trashDir", trashDir.Dir)
@@ -319,15 +358,27 @@ func (b *Box) Open() error {
 		}
 
 		b.TrashDirs = append(b.TrashDirs, trashDir.Dir)
-		b.FilesByTrashDir[trashDir.Dir] = files
+		if len(files) > 0 {
+			// TODO: perf: run only when necessary
+			sortFiles(files, b.sortBy, b.ascend)
+			b.FilesByTrashDir[trashDir.Dir] = files
+		}
 		b.Files = append(b.Files, files...)
 	}
 
 	if len(b.Files) == 0 {
-		return fmt.Errorf("not found trashed files")
+		return fmt.Errorf("%w: trashed files", ErrNotFound)
 	}
 
-	b.sortFiles()
+	sortFiles(b.Files, b.sortBy, b.ascend)
+
+	// truncate to last n items
+	if b.limitLast > 0 {
+		if len(b.Files) > b.limitLast {
+			n := len(b.Files)
+			b.Files = b.Files[n-b.limitLast : n]
+		}
+	}
 
 	return nil
 }
@@ -563,23 +614,24 @@ func (b *Box) getFiles(dirents []fs.DirEntry, fileEntries map[string]bool, trash
 	return files
 }
 
-func (b *Box) sortFiles() {
-	switch b.sortBy {
+// TODO: refactor
+func sortFiles(files []File, sortBy SortByType, ascend bool) {
+	switch sortBy {
 	case SortByDeletedAt: // default
-		sort.Slice(b.Files, func(i, j int) bool {
-			if !b.ascend {
+		sort.Slice(files, func(i, j int) bool {
+			if !ascend {
 				i, j = j, i
 			}
-			return b.Files[i].DeletedAt.Before(b.Files[j].DeletedAt)
+			return files[i].DeletedAt.Before(files[j].DeletedAt)
 		})
 	case SortBySize:
-		sort.Slice(b.Files, func(i, j int) bool {
-			if !b.ascend {
+		sort.Slice(files, func(i, j int) bool {
+			if !ascend {
 				i, j = j, i
 			}
 
 			// If size is not available, treat as less than 0
-			si, sj := b.Files[i].Size, b.Files[j].Size
+			si, sj := files[i].Size, files[j].Size
 
 			var minus int64 = -1
 			if si == nil {
@@ -592,20 +644,12 @@ func (b *Box) sortFiles() {
 			return *si < *sj
 		})
 	case SortByName:
-		sort.Slice(b.Files, func(i, j int) bool {
-			if !b.ascend {
+		sort.Slice(files, func(i, j int) bool {
+			if !ascend {
 				i, j = j, i
 			}
-			return b.Files[i].OriginalPath < b.Files[j].OriginalPath
+			return files[i].OriginalPath < files[j].OriginalPath
 		})
-	}
-
-	// truncate to last n items
-	if b.limitLast > 0 {
-		if len(b.Files) > b.limitLast {
-			n := len(b.Files)
-			b.Files = b.Files[n-b.limitLast : n]
-		}
 	}
 }
 

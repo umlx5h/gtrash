@@ -87,7 +87,7 @@ go install github.com/umlx5h/gtrash@latest
 ### Build from source
 
 ```bash
-git clone https://github.com/umlx5h/gtrash.git
+git clone https://github.com/umlx5h/gtrash.git --depth 1
 cd gtrash
 go build
 ./gtrash
@@ -360,13 +360,14 @@ Not recommended due to potential risks, unintentionally executing actual `rm` co
 
 As `gtrash` isn't fully compatible with `rm`, it's prudent to establish different aliases to avoid confusion and prevent accidental deletion of files.
 
-Consider setting up alternative aliases, such as:
+Consider setting up alternative short aliases, such as:
 
 ```bash
 alias gp='gtrash put' # gtrash put
 alias gm='gtrash put' # gtrash move (easy to change to rm)
 alias tp='gtrash put' # trash put
 alias tm='gtrash put' # trash move (easy to change to rm)
+alias tt='gtrash put' # to trash
 ```
 
 If you are in the habit of using rm, consider creating an alias that displays a cautionary message.
@@ -630,13 +631,18 @@ Currently possible only by day.
 
 ```bash
 # Remove files deleted over a week ago
-$ gtrash find --day-old 7 --rm
+$ gtrash prune --day 7
 
-# Remove files deleted within the last 24 hours
-$ gtrash find --day-new 1 --rm
+# Almost the same as prune
+$ gtrash find --day-old 7 --rm
 ```
 
 Size-based:
+
+There are two methods.
+
+`find` filters by the specified size and removes them.
+
 ```bash
 # Remove trashed files larger than 10MB
 $ gtrash find --size-large 10mb --rm
@@ -651,8 +657,16 @@ $ gtrash find --size-large 1gb --rm
 $ gtrash find --size-small 0 --rm
 ```
 
-Sizes and dates can be combined, and other filters can be applied.
+`prune` removes large files first so that the overall trash size is smaller than the specified size:
+```
+# After this, the size of the trash can is guaranteed to be less than 5 GB.
+$ gtrash prune --size 5GB
 
+# If you want to exclude recently deleted files, you can also specify day.
+$ gtrash prune --size 5GB --day 7
+```
+
+Sizes and dates can be combined in `find`, and other filters can be applied:
 ```bash
 # Remove files older than a week and larger than 10MB
 $ gtrash find --day-old 7 --size-large 10mb --rm

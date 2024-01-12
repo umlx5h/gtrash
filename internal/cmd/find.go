@@ -45,6 +45,8 @@ type findOptions struct {
 	showTrashPath bool
 
 	restoreTo string
+
+	trashDir string
 }
 
 func newFindCmd() *findCmd {
@@ -135,11 +137,22 @@ This is not necessary if running outside of a terminal`)
 	cmd.Flags().IntVar(&root.opts.dayOld, "day-old", 0, "Filter by deletion date (before X day)")
 	cmd.Flags().BoolVarP(&root.opts.showSize, "show-size", "S", false, `Show size always
 Automatically enabled if --sort size, --size-large, --size-small specified
-If the size could not be obtained, it will be displayed as '-'`)
+
+If the size could not be obtained, it will be displayed as '-'
+
+Note that this may take longer due to recursive size calcuration for directories.
+The folder size is cached, so it will run faster the next time.
+`)
 	cmd.Flags().BoolVar(&root.opts.showTrashPath, "show-trashpath", false, "Show trash path")
 	cmd.Flags().BoolVarP(&root.opts.reverse, "reverse", "r", false, "Reverse sort order (default: ascending)")
 	cmd.Flags().StringVar(&root.opts.restoreTo, "restore-to", "", "Restore to this path instead of original path")
 	cmd.Flags().IntVarP(&root.opts.last, "last", "n", 0, "Show n last files")
+	cmd.Flags().StringVar(&root.opts.trashDir, "trash-dir", "", `Specify a full path if you want to search only a specific trash can
+By default, all trash cans are searched.
+
+For $HOME trash only:
+    --trash-dir "$HOME/.local/share/Trash"
+`)
 
 	cmd.MarkFlagsMutuallyExclusive("rm", "restore")
 	cmd.MarkFlagsMutuallyExclusive("directory", "cwd")
@@ -175,9 +188,16 @@ func findCmdRun(args []string, opts findOptions) error {
 		trash.WithDay(opts.dayNew, opts.dayOld), // TODO: also set in restore?
 		trash.WithSize(opts.sizeLarge, opts.sizeSmall),
 		trash.WithLimitLast(opts.last),
+		trash.WithTrashDir(opts.trashDir),
 	)
 	if err := box.Open(); err != nil {
-		return err
+		// no error only remove mode (consider executing via batch)
+		if opts.doRemove && errors.Is(err, trash.ErrNotFound) {
+			fmt.Printf("do nothing: %s\n", err)
+			return nil
+		} else {
+			return err
+		}
 	}
 
 	listFiles(box.Files, box.GetSize, opts.showTrashPath)
@@ -198,9 +218,7 @@ func findCmdRun(args []string, opts findOptions) error {
 		if !opts.force && isTerminal && !tui.BoolPrompt("Are you sure you want to remove PERMENANTLY? ") {
 			return errors.New("do nothing")
 		}
-		if err := doRemove(box.Files); err != nil {
-			return err
-		}
+		doRemove(box.Files)
 
 	} else if opts.doRestore {
 		if opts.restoreTo != "" {

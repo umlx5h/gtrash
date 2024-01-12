@@ -57,11 +57,16 @@ func metafixCmdRun(opts metafixOptions) error {
 		trash.WithSortBy(trash.SortByName),
 	)
 	if err := box.Open(); err != nil {
-		return err
+		if errors.Is(err, trash.ErrNotFound) {
+			fmt.Printf("do nothing: %s\n", err)
+			return nil
+		} else {
+			return err
+		}
 	}
 
 	if len(box.OrphanMeta) == 0 {
-		fmt.Println("Not found invalid metadata")
+		fmt.Println("not found invalid metadata")
 		return nil
 	}
 
