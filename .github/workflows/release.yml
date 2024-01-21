@@ -32,3 +32,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # needed by homebrew
           TAP_GITHUB_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
+          # AUR
+          AUR_KEY: ${{ secrets.AUR_KEY }}
