@@ -41,8 +41,6 @@ The interface is made with an awesome [bubbletea](https://github.com/charmbracel
 
 ## Supported OS
 
-- Status: Not stable, interface may change in the future.
-
 ### Linux
 Supported
 
