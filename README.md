@@ -1,7 +1,5 @@
 # gtrash
 
-<h5 align="center">A Modern Trash CLI manager for Linux system trash written in Go</h5>
-
 ![demo](doc/image/demo.gif)
 
 `gtrash` is a trash CLI manager that fully complies with the [FreeDesktop.org specification](https://specifications.freedesktop.org/trash-spec/trashspec-latest.html).  
@@ -72,7 +70,15 @@ chmod a+x ./gtrash
 sudo mv ./gtrash /usr/local/bin/gtrash
 ```
 
-### Homebrew
+### AUR (Arch User Repository)
+
+with any AUR helpers
+```
+yay -S gtrash-bin
+paru -S gtrash-bin
+```
+
+### Homebrew (macOS)
 
 ```
 brew install umlx5h/tap/gtrash
