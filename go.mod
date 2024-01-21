@@ -9,7 +9,7 @@ require (
 	github.com/dustin/go-humanize v1.0.1
 	github.com/gobwas/glob v0.2.3
 	github.com/juju/ansiterm v1.0.0
-	github.com/lmittmann/tint v1.0.3
+	github.com/lmittmann/tint v1.0.4
 	github.com/moby/sys/mountinfo v0.7.1
 	github.com/otiai10/copy v1.14.0
 	github.com/rs/xid v1.5.0
@@ -17,7 +17,7 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.4
 	github.com/umlx5h/go-runewidth v0.0.0-20240106112317-9bbbb3702d5f
-	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc
+	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a
 	golang.org/x/term v0.16.0
 )
 
