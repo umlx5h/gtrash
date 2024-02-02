@@ -76,6 +76,12 @@ yay -S gtrash-bin
 paru -S gtrash-bin
 ```
 
+### Nixpkgs (NixOS)
+
+```
+nix-env -iA nixpkgs.gtrash
+```
+
 ### Homebrew (macOS)
 
 ```
