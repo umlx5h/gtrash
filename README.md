@@ -423,6 +423,11 @@ $ gtrash-put somefile
 
 This wrapper facilitates direct execution without needing an alias.
 
+### Is gtrash compatible with the gio trash and trash-put commands?
+
+It uses the exact same trash FreeDesktop specification as `gio trash` and `trash-cli`, so they are compatible.  
+If some program depends on these clis and cannot be changed, there is no need to change to `gtrash put`.
+
 ### Typing `gtrash` takes too long
 
 Set up an different alias from put.
