@@ -366,7 +366,7 @@ $ alias gtrash-put="gtrash put --rm-mode"
 
 ### Can I alias `rm=gtrash put`?
 
-Not recommended due to potential risks, unintentionally executing actual `rm` commands, especially with `sudo rm` or on SSH servers.
+You can but I do not recommend due to potential risks, unintentionally executing actual `rm` commands, such as `sudo rm` or on SSH servers.
 
 As `gtrash` isn't fully compatible with `rm`, it's prudent to establish different aliases to avoid confusion and prevent accidental deletion of files.
 
