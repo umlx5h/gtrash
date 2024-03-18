@@ -162,7 +162,7 @@ The table on the left is the list of files in the trash and the table on the rig
 
 Press `?` for detailed operations.  
 Navigate using `j`, `k`, or the cursor keys.  
-Use `l` or `Space` to move files to the right table.  
+Use `l` or `right arrow key` or `Space` to move files to the right table.  
 
 Vim key bindings are used.  
 Incremental searches can be performed with `/`.  

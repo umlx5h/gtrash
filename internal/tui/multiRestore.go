@@ -397,12 +397,12 @@ func newMultiRestoreModel(files []trash.File) multiRestoreModel {
 		key.WithHelp("TAB", "focus"),
 	)
 	km.moveRight = key.NewBinding(
-		key.WithKeys("l"),
-		key.WithHelp("l", "move right"),
+		key.WithKeys("l", "right"),
+		key.WithHelp("l/→", "move right"),
 	)
 	km.moveLeft = key.NewBinding(
-		key.WithKeys("h"),
-		key.WithHelp("h", "move left"),
+		key.WithKeys("h", "left"),
+		key.WithHelp("h/←", "move left"),
 	)
 	km.moveRightALL = key.NewBinding(
 		key.WithKeys("L"),
