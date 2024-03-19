@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/dustin/go-humanize"
@@ -50,7 +51,9 @@ func summaryCmdRun(_ summaryOptions) error {
 	)
 
 	if err := box.Open(); err != nil {
-		return err
+		if !errors.Is(err, trash.ErrNotFound) {
+			return err
+		}
 	}
 
 	var (
