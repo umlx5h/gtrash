@@ -11,7 +11,7 @@ builds:
       - linux
       - darwin
     ldflags:
-      -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser
     flags:
       - -trimpath
 
