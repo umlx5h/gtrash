@@ -1,6 +1,6 @@
 services:
   itest:
-    image: golang:1.21
+    image: golang:1.22
     working_dir: /app
     tmpfs:
       - /external
