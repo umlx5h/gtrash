@@ -59,8 +59,8 @@ func BoolPrompt(prompt string) bool {
 	return false
 }
 
-func ChoicePrompt(prompt string, choices []string, defaultValue *string) (string, error) {
-	model := newChoiceInputModel(prompt, choices, defaultValue)
+func ChoicePrompt(prompt string, choices []string) (string, error) {
+	model := newChoiceInputModel(prompt, choices)
 	result, err := tea.NewProgram(model).Run()
 	if err != nil {
 		return "", err

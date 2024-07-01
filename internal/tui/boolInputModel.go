@@ -2,6 +2,7 @@ package tui
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
@@ -12,25 +13,25 @@ type boolInputModel struct {
 	confirmed bool
 }
 
-func yesno(s string) (bool, error) {
+func yesno(s string) (bool, string, error) {
 	if s == "" {
-		return false, errors.New("empty")
+		return false, "", errors.New("empty")
 	}
-	switch s[0:1] {
+	switch strings.ToLower(s[0:1]) {
 	case "y":
-		return true, nil
+		return true, "Yes", nil
 	case "n":
-		return false, nil
+		return false, "No", nil
 	}
-	return false, errors.New("unknown")
+	return false, "", errors.New("unknown")
 }
 
 func newBoolInputModel(prompt string) boolInputModel {
 	textInput := textinput.New()
 	textInput.Prompt = prompt
-	textInput.Placeholder = "yes/no"
+	textInput.Placeholder = "(Yes/No)"
 	textInput.Validate = func(value string) error {
-		_, err := yesno(value)
+		_, _, err := yesno(value)
 		return err
 	}
 	textInput.Focus()
@@ -57,8 +58,9 @@ func (m boolInputModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 	var cmd tea.Cmd
 	m.textInput, cmd = m.textInput.Update(msg)
-	if _, err := yesno(m.textInput.Value()); err == nil {
+	if _, value, err := yesno(m.textInput.Value()); err == nil {
 		m.textInput.Blur()
+		m.textInput.SetValue(value)
 		m.confirmed = true
 		return m, tea.Quit
 	}
@@ -67,8 +69,7 @@ func (m boolInputModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m boolInputModel) Value() bool {
 	valueStr := m.textInput.Value()
-
-	v, _ := yesno(valueStr)
+	v, _, _ := yesno(valueStr)
 	return v
 }
 

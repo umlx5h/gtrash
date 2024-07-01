@@ -228,7 +228,7 @@ func doRestore(files []trash.File, restoreTo string, prompt bool) error {
 					choice = []string{"new-name", "skip", "repeat-prev", "quit"}
 				}
 				// TODO: Make the message easy to understand
-				selected, err = tui.ChoicePrompt(fmt.Sprintf("Conflicted restore path %q\n\tPlease choose one of the following: ", file.OriginalPath), choice, nil)
+				selected, err = tui.ChoicePrompt(fmt.Sprintf("Conflicted restore path %q\n\tPlease choose one of the following: ", file.OriginalPath), choice)
 				if err != nil {
 					return err
 				}

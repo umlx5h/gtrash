@@ -187,7 +187,7 @@ func putCmdRun(args []string, opts putOptions) error {
 		if opts.prompt {
 			prompt := fmt.Sprintf("Do you trash %s %q? ", posix.FileType(st), arg)
 			choices := []string{"yes", "no", "all-yes", "quit"}
-			selected, err := tui.ChoicePrompt(prompt, choices, nil)
+			selected, err := tui.ChoicePrompt(prompt, choices)
 			if err != nil {
 				// canceled
 				return err
