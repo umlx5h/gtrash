@@ -9,38 +9,37 @@ import (
 )
 
 type choiceInputModel struct {
-	textInput    textinput.Model
-	keys         map[string]string
-	defaultValue *string
-	confirmed    bool
+	textInput textinput.Model
+	keys      map[string]string
+	confirmed bool
 }
 
-func newChoiceInputModel(prompt string, choices []string, defaultValue *string) choiceInputModel {
+func newChoiceInputModel(prompt string, choices []string) choiceInputModel {
 	textInput := textinput.New()
 	textInput.Prompt = prompt
-	textInput.Placeholder = strings.Join(choices, "/")
-	if defaultValue != nil {
-		textInput.Placeholder += ", default " + *defaultValue
+
+	for i := range choices {
+		choices[i] = strings.ToUpper(choices[i][:1]) + choices[i][1:]
 	}
 
+	textInput.Placeholder = "(" + strings.Join(choices, "/") + ")"
 	keys := make(map[string]string)
 	for _, choice := range choices {
-		keys[choice[0:1]] = choice
+		keys[strings.ToLower(choice[0:1])] = choice
 	}
 	textInput.Validate = func(s string) error {
-		if s == "" && defaultValue != nil {
-			return nil
+		if s == "" {
+			return errors.New("empty")
 		}
-		if _, ok := keys[s]; ok {
+		if _, ok := keys[strings.ToLower(s[0:1])]; ok {
 			return nil
 		}
 		return errors.New("unknown")
 	}
 	textInput.Focus()
 	return choiceInputModel{
-		textInput:    textInput,
-		keys:         keys,
-		defaultValue: defaultValue,
+		textInput: textInput,
+		keys:      keys,
 	}
 }
 
@@ -56,29 +55,17 @@ func (m choiceInputModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.Type {
 		case tea.KeyCtrlC, tea.KeyEsc:
+			m.textInput.Blur()
 			return m, tea.Quit
-		case tea.KeyEnter:
-			value := m.textInput.Value()
-			if value == "" && m.defaultValue != nil {
-				// Enter pressed
-				m.textInput.SetValue(*m.defaultValue)
-				m.confirmed = true
-				m.textInput.Blur()
-				return m, tea.Quit
-			} else if value, ok := m.keys[value]; ok {
-				m.textInput.SetValue(value)
-				m.confirmed = true
-				m.textInput.Blur()
-				return m, tea.Quit
-			}
 		}
 	}
 
 	var cmd tea.Cmd
 	m.textInput, cmd = m.textInput.Update(msg)
-	if _, ok := m.keys[m.textInput.Value()]; ok {
-		m.confirmed = true
+	if value, ok := m.keys[strings.ToLower(m.textInput.Value())]; ok {
 		m.textInput.Blur()
+		m.textInput.SetValue(value)
+		m.confirmed = true
 		return m, tea.Quit
 	}
 	return m, cmd
@@ -86,10 +73,7 @@ func (m choiceInputModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m choiceInputModel) Value() string {
 	value := m.textInput.Value()
-	if value == "" && m.defaultValue != nil {
-		return *m.defaultValue
-	}
-	return m.keys[value]
+	return strings.ToLower(value)
 }
 
 func (m choiceInputModel) View() string {
