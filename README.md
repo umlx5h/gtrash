@@ -2,7 +2,7 @@
 
 ![demo](doc/image/demo.gif)
 
-`gtrash` is a trash CLI manager that fully complies with the [FreeDesktop.org specification](https://specifications.freedesktop.org/trash-spec/trashspec-latest.html).  
+`gtrash` is a trash CLI manager that fully complies with the [FreeDesktop.org specification](https://specifications.freedesktop.org/trash-spec/latest/).  
 Unlike `rm`, `gtrash` moves files to the system trash can, enabling easy restoration of important files at any time.
 
 If you usually use `rm` in the shell, `gtrash` can serve as a substitute.
@@ -224,7 +224,7 @@ $ gtrash put -h
 
 ## How it works
 
-`gtrash` adheres to the [FreeDesktop.org specification](https://specifications.freedesktop.org/trash-spec/trashspec-latest.html).
+`gtrash` adheres to the [FreeDesktop.org specification](https://specifications.freedesktop.org/trash-spec/latest/).
 
 Its primary function is akin to `mv`, but it extends functionality by recording meta-information and automatically transferring files to the trash can in the external file system.
 

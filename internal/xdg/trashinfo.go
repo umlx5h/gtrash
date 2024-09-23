@@ -19,8 +19,8 @@ const (
 )
 
 // XDG specifications
-// https://specifications.freedesktop.org/trash-spec/trashspec-latest.html
-// https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s03.html
+// https://specifications.freedesktop.org/trash-spec/latest/
+// https://specifications.freedesktop.org/desktop-entry-spec/latest/basic-format.html
 
 type Info struct {
 	Path         string    // $PWD/file.go (url decoded)
