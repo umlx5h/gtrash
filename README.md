@@ -444,6 +444,16 @@ Or you could setup a symbolic link.
 sudo ln -s /usr/local/bin/gtrash /usr/local/bin/g
 ```
 
+Note that gtrash works perfectly well with any binary name.
+
+If you don't like the name "gtrash", you can change it to whatever name you like.
+
+```
+sudo mv /usr/local/bin/gtrash /usr/local/bin/rip
+```
+
+However, be aware that if you are installing via a package manager, you may not be able to update it.
+
 ### What happens when I run it with sudo?
 
 Files are moved to the Trash under the `root` user's home directory.
