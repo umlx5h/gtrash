@@ -94,7 +94,7 @@ func (c DirCache) ToFile(truncate bool) string {
 }
 
 func (c DirCache) Save(trashDir string, truncate bool) error {
-	// To update the directorysizes file, implementations MUST use a temporary
+	// xdg ref: To update the directorysizes file, implementations MUST use a temporary
 	// file followed by an atomic rename() operation, in order to avoid
 	// corruption due to two implementations writing to the file at the same
 	// time.

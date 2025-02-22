@@ -320,7 +320,7 @@ func useHomeTrash(path string) (sameFS bool, err error) {
 }
 
 func useExternalTrash(topDir string) (string, error) {
-	// When trashing a file from a non-home partition/device4 , an
+	// xdg ref: When trashing a file from a non-home partition/device4 , an
 	// implementation (if it supports trashing in top directories) MUST
 	// check for the presence of $topdir/.Trash.
 	trashDir := filepath.Join(topDir, ".Trash")
@@ -332,12 +332,12 @@ func useExternalTrash(topDir string) (string, error) {
 		return "", errors.New(".Trash is not directory")
 	}
 
-	// The implementation also MUST check that this directory is not a symbolic link.
+	// xdg ref: The implementation also MUST check that this directory is not a symbolic link.
 	if info.Mode().Type() == fs.ModeSymlink {
 		return "", errors.New(".Trash is symlink")
 	}
 
-	// If this directory is present, the implementation MUST, by default, check for the “sticky bit”.
+	// xdg ref: If this directory is present, the implementation MUST, by default, check for the “sticky bit”.
 	if info.Mode()&os.ModeSticky == 0 {
 		return "", errors.New(".Trash sticky bit not set")
 	}
