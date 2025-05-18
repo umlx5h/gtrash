@@ -14,6 +14,7 @@ import (
 
 	"github.com/moby/sys/mountinfo"
 	"github.com/umlx5h/gtrash/internal/env"
+	"github.com/yookoala/realpath"
 )
 
 type trashDirType string
@@ -238,55 +239,39 @@ func getAllMountpoints() ([]string, error) {
 	return mountpoints, nil
 }
 
-// Obtain a mount point associated with a file
+// Obtain a mount point associated with a file.
 // Same as df <PATH>
 func getMountpoint(path string) (string, error) {
-	// get mountpoints from /proc/self/mountinfo on Linux
-	// getfsstat(2) used on Mac (BSD)
 
-	fi, err := os.Lstat(path)
+	// iterate over the parents of the real (without symlinks) path until we find a mount point
+
+	candidate, err := realpath.Realpath(path)
 	if err != nil {
 		return "", err
 	}
 
-	fromInfo, ok := fi.Sys().(*syscall.Stat_t)
-	if !ok {
-		return "", fmt.Errorf("get stat(2) st_dev")
+OUTER:
+	for {
+		// root is always mounted
+		if candidate == string(os.PathSeparator) {
+			slog.Debug("root mountpoint is detected", "path", path)
+			break OUTER
+		}
+
+		if candidate == "." {
+			// should not reached here
+			// check to prevent busy loop
+			return "", errors.New("mountpoint is '.'")
+		}
+
+		if mounted, err := mountinfo.Mounted(candidate); err == nil && mounted {
+			break OUTER
+		}
+
+		candidate = filepath.Dir(candidate)
 	}
 
-	// this list could contain duplicate (bind) mount paths for the filesystem we are looking for,
-	// any one of them qualifies as $topdir
-	mountpoints, err := mountinfo.GetMounts(func(i *mountinfo.Info) (skip bool, stop bool) {
-		// skip bind mounts into subdirectories
-		if i.Root != "/" {
-			return true, false
-		}
-
-		mi, err := os.Stat(i.Mountpoint)
-		if err != nil {
-			return true, false
-		}
-
-		mountInfo, ok := mi.Sys().(*syscall.Stat_t)
-		if !ok {
-			return true, false
-		}
-
-		if mountInfo.Dev != fromInfo.Dev {
-			return true, false
-		}
-
-		return false, false
-	})
-	if err != nil {
-		return "", err
-	}
-
-	if len(mountpoints) == 0 {
-		return "", fmt.Errorf("no mount for device %d", fromInfo.Dev)
-	}
-
-	return mountpoints[0].Mountpoint, nil
+	return candidate, nil
 }
 
 func useHomeTrash(path string) (sameFS bool, err error) {
