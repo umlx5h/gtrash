@@ -243,10 +243,6 @@ func getAllMountpoints() ([]string, error) {
 func getMountpoint(path string) (string, error) {
 	// get mountpoints from /proc/self/mountinfo on Linux
 	// getfsstat(2) used on Mac (BSD)
-	mountpoints, err := mountinfo.GetMounts(nil)
-	if err != nil {
-		return "", err
-	}
 
 	fi, err := os.Lstat(path)
 	if err != nil {
@@ -255,26 +251,42 @@ func getMountpoint(path string) (string, error) {
 
 	fromInfo, ok := fi.Sys().(*syscall.Stat_t)
 	if !ok {
-		return "", fmt.Errorf("get stat(2) dev_ino")
+		return "", fmt.Errorf("get stat(2) st_dev")
 	}
 
-	for _, m := range mountpoints {
-		mi, err := os.Stat(m.Mountpoint)
+	// this list could contain duplicate (bind) mount paths for the filesystem we are looking for,
+	// any one of them qualifies as $topdir
+	mountpoints, err := mountinfo.GetMounts(func(i *mountinfo.Info) (skip bool, stop bool) {
+		// skip bind mounts into subdirectories
+		if i.Root != "/" {
+			return true, false
+		}
+
+		mi, err := os.Stat(i.Mountpoint)
 		if err != nil {
-			continue
+			return true, false
 		}
 
 		mountInfo, ok := mi.Sys().(*syscall.Stat_t)
 		if !ok {
-			continue
+			return true, false
 		}
 
-		if fromInfo.Dev == mountInfo.Dev {
-			return m.Mountpoint, nil
+		if mountInfo.Dev != fromInfo.Dev {
+			return true, false
 		}
+
+		return false, false
+	})
+	if err != nil {
+		return "", err
 	}
 
-	return "", fmt.Errorf("no mount for device %d", fromInfo.Dev)
+	if len(mountpoints) == 0 {
+		return "", fmt.Errorf("no mount for device %d", fromInfo.Dev)
+	}
+
+	return mountpoints[0].Mountpoint, nil
 }
 
 func useHomeTrash(path string) (sameFS bool, err error) {
