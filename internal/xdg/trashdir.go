@@ -238,14 +238,12 @@ func getAllMountpoints() ([]string, error) {
 	return mountpoints, nil
 }
 
-var mountinfo_GetMounts = mountinfo.GetMounts
-
 // Obtain a mount point associated with a file
 // Same as df <PATH>
 func getMountpoint(path string) (string, error) {
 	// get mountpoints from /proc/self/mountinfo on Linux
 	// getfsstat(2) used on Mac (BSD)
-	mountpoints, err := mountinfo_GetMounts(nil)
+	mountpoints, err := mountinfo.GetMounts(nil)
 	if err != nil {
 		return "", err
 	}
