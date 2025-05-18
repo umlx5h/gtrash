@@ -239,23 +239,25 @@ func getAllMountpoints() ([]string, error) {
 	return mountpoints, nil
 }
 
+var mountinfo_Mounted = mountinfo.Mounted
+var realpath_Realpath = realpath.Realpath
+
 // Obtain a mount point associated with a file.
 // Same as df <PATH>
 func getMountpoint(path string) (string, error) {
 
 	// iterate over the parents of the real (without symlinks) path until we find a mount point
 
-	candidate, err := realpath.Realpath(path)
+	candidate, err := realpath_Realpath(path)
 	if err != nil {
 		return "", err
 	}
 
-OUTER:
 	for {
 		// root is always mounted
 		if candidate == string(os.PathSeparator) {
 			slog.Debug("root mountpoint is detected", "path", path)
-			break OUTER
+			break
 		}
 
 		if candidate == "." {
@@ -264,8 +266,8 @@ OUTER:
 			return "", errors.New("mountpoint is '.'")
 		}
 
-		if mounted, err := mountinfo.Mounted(candidate); err == nil && mounted {
-			break OUTER
+		if mounted, err := mountinfo_Mounted(candidate); err == nil && mounted {
+			break
 		}
 
 		candidate = filepath.Dir(candidate)
