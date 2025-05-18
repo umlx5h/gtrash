@@ -250,30 +250,33 @@ func getMountpoint(path string) (string, error) {
 		return "", err
 	}
 
-	mountpoint := path
-OUTER:
-	for {
-		// root is always mounted
-		if mountpoint == string(os.PathSeparator) {
-			slog.Debug("root mountpoint is detected", "path", path)
-			break OUTER
-		}
-
-		if mountpoint == "." {
-			// should not reached here
-			// check to prevent busy loop
-			return "", errors.New("mountpoint is '.'")
-		}
-
-		for _, m := range mountpoints {
-			if m.Mountpoint == mountpoint {
-				break OUTER
-			}
-		}
-		mountpoint = filepath.Dir(mountpoint)
+	fi, err := os.Lstat(path)
+	if err != nil {
+		return "", err
 	}
 
-	return mountpoint, nil
+	fromInfo, ok := fi.Sys().(*syscall.Stat_t)
+	if !ok {
+		return "", fmt.Errorf("get stat(2) dev_ino")
+	}
+
+	for _, m := range mountpoints {
+		mi, err := os.Stat(m.Mountpoint)
+		if err != nil {
+			continue
+		}
+
+		mountInfo, ok := mi.Sys().(*syscall.Stat_t)
+		if !ok {
+			continue
+		}
+
+		if fromInfo.Dev == mountInfo.Dev {
+			return m.Mountpoint, nil
+		}
+	}
+
+	return "", fmt.Errorf("no mount for device %d", fromInfo.Dev)
 }
 
 func useHomeTrash(path string) (sameFS bool, err error) {
