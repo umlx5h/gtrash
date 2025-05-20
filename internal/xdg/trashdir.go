@@ -14,7 +14,6 @@ import (
 
 	"github.com/moby/sys/mountinfo"
 	"github.com/umlx5h/gtrash/internal/env"
-	"github.com/yookoala/realpath"
 )
 
 type trashDirType string
@@ -240,15 +239,15 @@ func getAllMountpoints() ([]string, error) {
 }
 
 var mountinfo_Mounted = mountinfo.Mounted
-var realpath_Realpath = realpath.Realpath
+var EvalSymLinks = filepath.EvalSymlinks
 
 // Obtain a mount point associated with a file.
 // Same as df <PATH>
 func getMountpoint(path string) (string, error) {
 
-	// iterate over the parents of the real (without symlinks) path until we find a mount point
+	// iterate over the real (without symlinks) parents of path until we find a mount point
 
-	candidate, err := realpath_Realpath(path)
+	candidate, err := EvalSymLinks(filepath.Dir(path))
 	if err != nil {
 		return "", err
 	}
@@ -266,7 +265,12 @@ func getMountpoint(path string) (string, error) {
 			return "", errors.New("mountpoint is '.'")
 		}
 
-		if mounted, err := mountinfo_Mounted(candidate); err == nil && mounted {
+		mounted, err := mountinfo_Mounted(candidate)
+		if err != nil {
+			return "", err
+		}
+
+		if mounted {
 			break
 		}
 

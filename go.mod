@@ -17,7 +17,6 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.4
 	github.com/umlx5h/go-runewidth v0.0.0-20240106112317-9bbbb3702d5f
-	github.com/yookoala/realpath v1.0.0
 	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8
 	golang.org/x/term v0.21.0
 )

@@ -20,7 +20,19 @@ func TestGetMountpoint(t *testing.T) {
 		return slices.Contains(mounts, fpath), nil
 	}
 
-	realpath_Realpath = func(path string) (string, error) {
+	// not evaluating each component here, just the entire path
+	symlinked := map[string]string{
+		// file is a link
+		"/foo/link.txt": "/foo/bar/target.txt",
+
+		// first component is a link
+		"/link": "/foo/bar",
+	}
+
+	EvalSymLinks = func(path string) (string, error) {
+		if symlink, ok := symlinked[path]; ok {
+			return symlink, nil
+		}
 		return path, nil
 	}
 
@@ -34,6 +46,9 @@ func TestGetMountpoint(t *testing.T) {
 		{path: "/ffoo/bar/a.txt", want: "/ffoo/bar"},
 		{path: "/aaa/bbb/ccc/ddd.txt", want: "/"},
 		{path: "/", want: "/"},
+
+		{path: "/foo/link.txt", want: "/foo"},
+		{path: "/link/a.txt", want: "/foo/bar"},
 	}
 
 	t.Run("normal", func(t *testing.T) {
