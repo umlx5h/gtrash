@@ -1,22 +1,39 @@
 package xdg
 
 import (
+	"slices"
 	"testing"
 
-	"github.com/moby/sys/mountinfo"
 	"github.com/stretchr/testify/require"
 )
 
 func TestGetMountpoint(t *testing.T) {
 	// replace to stub
-	mountinfo_GetMounts = func(f mountinfo.FilterFunc) ([]*mountinfo.Info, error) {
-		return []*mountinfo.Info{
-			{Mountpoint: "/"},
-			{Mountpoint: "/foo/bar"},
-			{Mountpoint: "/foo"},
-			{Mountpoint: "/fooo/bar"},
-			{Mountpoint: "/ffoo/bar"},
-		}, nil
+	mountinfo_Mounted = func(fpath string) (bool, error) {
+		mounts := []string{
+			"/",
+			"/foo/bar",
+			"/foo",
+			"/fooo/bar",
+			"/ffoo/bar",
+		}
+		return slices.Contains(mounts, fpath), nil
+	}
+
+	// not evaluating each component here, just the entire path
+	symlinked := map[string]string{
+		// file is a link
+		"/foo/link.txt": "/foo/bar/target.txt",
+
+		// first component is a link
+		"/link": "/foo/bar",
+	}
+
+	EvalSymLinks = func(path string) (string, error) {
+		if symlink, ok := symlinked[path]; ok {
+			return symlink, nil
+		}
+		return path, nil
 	}
 
 	testsNormal := []struct {
@@ -29,6 +46,9 @@ func TestGetMountpoint(t *testing.T) {
 		{path: "/ffoo/bar/a.txt", want: "/ffoo/bar"},
 		{path: "/aaa/bbb/ccc/ddd.txt", want: "/"},
 		{path: "/", want: "/"},
+
+		{path: "/foo/link.txt", want: "/foo"},
+		{path: "/link/a.txt", want: "/foo/bar"},
 	}
 
 	t.Run("normal", func(t *testing.T) {

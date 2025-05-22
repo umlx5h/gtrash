@@ -238,42 +238,46 @@ func getAllMountpoints() ([]string, error) {
 	return mountpoints, nil
 }
 
-var mountinfo_GetMounts = mountinfo.GetMounts
+var mountinfo_Mounted = mountinfo.Mounted
+var EvalSymLinks = filepath.EvalSymlinks
 
-// Obtain a mount point associated with a file
+// Obtain a mount point associated with a file.
 // Same as df <PATH>
 func getMountpoint(path string) (string, error) {
-	// get mountpoints from /proc/self/mountinfo on Linux
-	// getfsstat(2) used on Mac (BSD)
-	mountpoints, err := mountinfo_GetMounts(nil)
+
+	// iterate over the real (without symlinks) parents of path until we find a mount point
+
+	candidate, err := EvalSymLinks(filepath.Dir(path))
 	if err != nil {
 		return "", err
 	}
 
-	mountpoint := path
-OUTER:
 	for {
 		// root is always mounted
-		if mountpoint == string(os.PathSeparator) {
+		if candidate == string(os.PathSeparator) {
 			slog.Debug("root mountpoint is detected", "path", path)
-			break OUTER
+			break
 		}
 
-		if mountpoint == "." {
+		if candidate == "." {
 			// should not reached here
 			// check to prevent busy loop
 			return "", errors.New("mountpoint is '.'")
 		}
 
-		for _, m := range mountpoints {
-			if m.Mountpoint == mountpoint {
-				break OUTER
-			}
+		mounted, err := mountinfo_Mounted(candidate)
+		if err != nil {
+			return "", err
 		}
-		mountpoint = filepath.Dir(mountpoint)
+
+		if mounted {
+			break
+		}
+
+		candidate = filepath.Dir(candidate)
 	}
 
-	return mountpoint, nil
+	return candidate, nil
 }
 
 func useHomeTrash(path string) (sameFS bool, err error) {
